@@ -25,10 +25,10 @@ class _IntroScreenState extends State<IntroScreen> {
       duration: Duration(milliseconds: 150),
       margin: EdgeInsets.symmetric(horizontal: 8.0),
       height: 8.0,
-      width: isActive ? 24.0 : 16.0,
+      width: isActive ? 29.0 : 12.0,
       decoration: BoxDecoration(
         color: isActive ? Colors.white : Color(0xFF7B51D3),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
     );
   }
@@ -45,9 +45,9 @@ class _IntroScreenState extends State<IntroScreen> {
               end: Alignment.bottomCenter,
               stops: [0.1, 0.4, 0.7, 0.9],
               colors: [
-                Color(0xFF3594DD),
-                Color(0xFF4563DB),
-                Color(0xFF5036D5),
+                Theme.of(context).accentColor,
+                Theme.of(context).primaryColor,
+                Colors.deepPurple,
                 Color(0xFF5B16D0),
               ],
             ),
@@ -55,7 +55,7 @@ class _IntroScreenState extends State<IntroScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 40.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   alignment: Alignment.centerRight,
@@ -64,6 +64,7 @@ class _IntroScreenState extends State<IntroScreen> {
                     child: Text(
                       'Skip',
                       style: TextStyle(
+                        fontFamily: 'Overpass',
                         color: Colors.white,
                         fontSize: 20.0,
                       ),
@@ -71,7 +72,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 Container(
-                  height: 600.0,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageController,
@@ -87,22 +88,24 @@ class _IntroScreenState extends State<IntroScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Center(
-                              child: Image(
-                                image: AssetImage(
-                                  'assets/images/onboarding0.png',
-                                ),
-                                height: 300.0,
-                                width: 300.0,
-                              ),
-                            ),
+                                child: Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    width: MediaQuery.of(context).size.height *
+                                        0.4,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
+                                    child: Image.asset('assets/help.png'))),
                             SizedBox(height: 30.0),
                             Text(
-                              'Connect people\naround the world',
-                              style: ColorManager.kTitleStyle,
+                              'Now its your responsibility',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .merge(ColorManager.kTitleStyle),
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                              'A Single help can fill the stomach',
                               style: ColorManager.kSubtitleStyle,
                             ),
                           ],
@@ -116,20 +119,21 @@ class _IntroScreenState extends State<IntroScreen> {
                             Center(
                               child: Image(
                                 image: AssetImage(
-                                  'assets/images/onboarding1.png',
+                                  'assets/care.png',
                                 ),
-                                height: 300.0,
-                                width: 300.0,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                                width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Live your life smarter\nwith us!',
+                              'They Need your care !',
                               style: ColorManager.kTitleStyle,
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                              'Give a little time to your daily shedule . it can worth a lot',
                               style: ColorManager.kSubtitleStyle,
                             ),
                           ],
@@ -143,20 +147,21 @@ class _IntroScreenState extends State<IntroScreen> {
                             Center(
                               child: Image(
                                 image: AssetImage(
-                                  'assets/images/onboarding2.png',
+                                  'assets/care.png',
                                 ),
-                                height: 300.0,
-                                width: 300.0,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                                width: MediaQuery.of(context).size.height * 0.4,
                               ),
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Get a new experience\nof imagination',
+                              'Adopt new animals aroud you !',
                               style: ColorManager.kTitleStyle,
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                              'someone is waiting you to be adopt',
                               style: ColorManager.kSubtitleStyle,
                             ),
                           ],
@@ -210,7 +215,7 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       bottomSheet: _currentPage == _numPages - 1
           ? Container(
-              height: 100.0,
+              height: MediaQuery.of(context).size.height * 0.1,
               width: double.infinity,
               color: Colors.white,
               child: GestureDetector(
@@ -221,6 +226,7 @@ class _IntroScreenState extends State<IntroScreen> {
                     child: Text(
                       'Get started',
                       style: TextStyle(
+                        fontFamily: 'Overpass',
                         color: Color(0xFF5B16D0),
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,

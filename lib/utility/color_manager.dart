@@ -6,7 +6,8 @@ class ColorManager {
 
   static final kTitleStyle = TextStyle(
     color: Colors.white,
-    fontFamily: 'CM Sans Serif',
+    fontFamily: 'Overpass',
+    fontStyle: FontStyle.italic,
     fontSize: 26.0,
     height: 1.5,
   );
@@ -14,6 +15,8 @@ class ColorManager {
   static final kSubtitleStyle = TextStyle(
     color: Colors.white,
     fontSize: 18.0,
+    fontFamily: 'Overpass',
+    fontWeight: FontWeight.normal,
     height: 1.2,
   );
 }

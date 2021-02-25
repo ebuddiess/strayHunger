@@ -62,7 +62,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: CM Sans Serif
+   - family: CMS
      fonts:
        - asset: assets/fonts/cm_sans_serif_2012.ttf
 
