@@ -62,12 +62,16 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Overpass
-      fonts:
-        - asset: assets/fonts/Overpass-Bold.ttf
-        - asset: assets/fonts/Overpass-Italic.ttf
-        - asset: assets/fonts/Overpass-Light.ttf
-        - asset: assets/fonts/Overpass-Regular.ttf
+   - family: CM Sans Serif
+     fonts:
+       - asset: assets/fonts/cm_sans_serif_2012.ttf
+
+   - family: Overpass
+     fonts:
+       - asset: assets/fonts/Overpass-Bold.ttf
+       - asset: assets/fonts/Overpass-Italic.ttf
+       - asset: assets/fonts/Overpass-Light.ttf
+       - asset: assets/fonts/Overpass-Regular.ttf
   
   
   # For details regarding fonts from package dependencies,
