@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:minor/utility/color_manager.dart';
+import 'package:minor/utility/my_navigator.dart';
 
 class IntroScreen extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 Container(
                   alignment: Alignment.centerRight,
                   child: FlatButton(
-                    onPressed: () => print('Skip'),
+                    onPressed: () => MyNavigator.goToSignIn(context),
                     child: Text(
                       'Skip',
                       style: TextStyle(
@@ -219,7 +220,7 @@ class _IntroScreenState extends State<IntroScreen> {
               width: double.infinity,
               color: Colors.white,
               child: GestureDetector(
-                onTap: () => print('Get started'),
+                onTap: () => MyNavigator.goToSignIn(context),
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 30.0),
