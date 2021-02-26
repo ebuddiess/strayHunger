@@ -61,7 +61,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 Container(
                   alignment: Alignment.centerRight,
                   child: FlatButton(
-                    onPressed: () => MyNavigator.goToSignIn(context),
+                    onPressed: () => MyNavigator.goToPage(context, '/signin'),
                     child: Text(
                       'Skip',
                       style: TextStyle(
@@ -220,7 +220,7 @@ class _IntroScreenState extends State<IntroScreen> {
               width: double.infinity,
               color: Colors.white,
               child: GestureDetector(
-                onTap: () => MyNavigator.goToSignIn(context),
+                onTap: () => MyNavigator.goToPage(context, '/signin'),
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 30.0),

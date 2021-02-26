@@ -109,7 +109,7 @@ class Loginscreen extends StatelessWidget {
                       height: 55,
                       child: RaisedButton(
                         onPressed: () {
-                          MyNavigator.goToHomeScreen(context);
+                          MyNavigator.goToPage(context, '/login');
                         },
                         child: Text(
                           'Log in',
@@ -155,7 +155,7 @@ class Loginscreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        MyNavigator.goToSignUP(context);
+                        MyNavigator.goToPage(context, '/signup');
                       },
                       child: Text(
                         'Sign up',

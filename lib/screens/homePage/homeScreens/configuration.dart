@@ -14,7 +14,11 @@ List<Map> categories = [
 ];
 
 List<Map> drawerItems = [
-  {'icon': FontAwesomeIcons.userFriends, 'title': 'Profile', 'url': '/'},
+  {
+    'icon': FontAwesomeIcons.userFriends,
+    'title': 'Profile',
+    'url': '/userProfile'
+  },
   {'icon': FontAwesomeIcons.donate, 'title': 'My Donation', 'url': '/'},
   {'icon': FontAwesomeIcons.servicestack, 'title': 'My Services', 'url': '/'},
   {'icon': Icons.favorite, 'title': 'Favorites', 'url': '/'},
