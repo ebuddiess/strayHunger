@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'configuration.dart';
+import '../homeScreens/configuration.dart';
 
-class Screen2 extends StatelessWidget {
+class FoundPet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

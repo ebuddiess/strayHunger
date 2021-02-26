@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:minor/screens/homePage/drawerScreen.dart';
-import 'package:minor/screens/homePage/petLocatorstack.dart';
+import 'package:minor/screens/homePage/homeScreens/Drawer/drawerScreen.dart';
+import 'package:minor/screens/homePage/petLocator/petLocatorstack.dart';
 
 import 'homescreenstack.dart';
 

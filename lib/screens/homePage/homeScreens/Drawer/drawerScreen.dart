@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:minor/utility/my_navigator.dart';
 
-import 'configuration.dart';
+import '../configuration.dart';
 
 class DrawerScreen extends StatefulWidget {
   @override

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ProfilPage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   final String url;
 
-  ProfilPage({@required this.url});
+  ProfilePage({@required this.url});
 
   @override
-  _ProfilPageState createState() => _ProfilPageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilPageState extends State<ProfilPage> {
+class _ProfilePageState extends State<ProfilePage> {
   int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {

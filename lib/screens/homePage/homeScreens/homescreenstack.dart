@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:minor/screens/homePage/screen2.dart';
 
-import 'Profil.dart';
+import 'Drawer/drawerScreen.dart';
+import 'Profile.dart';
 import 'configuration.dart';
-import 'drawerScreen.dart';
 
 class HomeScreenStack extends StatefulWidget {
   @override
@@ -19,15 +18,17 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-        height: 60,
+        height: 50,
         child: FittedBox(
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              print("hi");
+            },
             child: Icon(
               Icons.add,
             ),
             backgroundColor: Colors.grey[900],
-            elevation: 15,
+            elevation: 10,
           ),
         ),
       ),
@@ -36,11 +37,11 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
+                spreadRadius: 5,
               )
             ],
-            color: Colors.grey.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(15)),
+            color: Colors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(1)),
         child: Row(
           children: [
             buildNavBarItem(Icons.home, 0),
@@ -53,7 +54,7 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
       ),
       body: Stack(
         // Here we have two screen Drawer and HomeScreen
-        children: [HomeScreen()],
+        children: [DrawerScreen(), HomeScreen()],
       ),
     );
   }
@@ -67,13 +68,13 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
       },
       child: Container(
         width: MediaQuery.of(context).size.width / 5,
-        height: 45,
+        height: MediaQuery.of(context).size.height * 0.050,
         child: icon != null
             ? Icon(
                 icon,
                 size: 25,
                 color: index == _selectedItemIndex
-                    ? Colors.black
+                    ? Theme.of(context).primaryColor
                     : Colors.grey[700],
               )
             : Container(),
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(isDrawerOpen ? 40 : 0.0)),
-      padding: EdgeInsets.only(left: 10, right: 10, top: 45),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 0),
       //
       child: Container(
           height: medHeight,
@@ -115,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: medHeight * 0.055,
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -137,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               setState(() {
                                 xOffset = 230;
                                 yOffset = 150;
-                                scaleFactor = 0.6;
+                                scaleFactor = 0.8;
                                 isDrawerOpen = true;
                               });
                             }),
@@ -158,20 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               // from here
               Container(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 45),
+                padding: EdgeInsets.only(left: 10, right: 10, top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Stories",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[500]),
-                    ),
                     Container(
                       margin: EdgeInsets.only(top: 8, bottom: 12),
-                      height: 60,
+                      height: medHeight * 0.07,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
@@ -208,13 +202,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    Container(
-                      height: 2,
-                      color: Colors.grey[300],
-                      margin: EdgeInsets.symmetric(horizontal: 30),
+                    SizedBox(
+                      height: 10,
                     ),
                     Container(
-                      height: 520,
+                      height: medHeight * 0.71,
                       child: Column(
                         children: [
                           Expanded(
@@ -247,8 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Container buildPostSection(String urlPost, String urlProfilePhoto) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8),
-      padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+      margin: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.symmetric(horizontal: 18, vertical: 15),
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.1),
         borderRadius: BorderRadius.circular(30),
@@ -262,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           buildPostPicture(urlPost),
           SizedBox(
-            height: 5,
+            height: 25,
           ),
           Text(
             "963 likes",
@@ -290,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        ProfilPage(url: urlProfilePhoto)));
+                        ProfilePage(url: urlProfilePhoto)));
               },
               child: Hero(
                 tag: urlProfilePhoto,
@@ -333,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Stack(
       children: [
         Container(
-          height: MediaQuery.of(context).size.width - 70,
+          height: MediaQuery.of(context).size.width - 100,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
@@ -362,11 +354,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Container buildStoryAvatar(String url) {
     return Container(
       margin: EdgeInsets.only(left: 18),
-      height: 60,
-      width: 60,
+      height: MediaQuery.of(context).size.height * 0.07,
+      width: MediaQuery.of(context).size.height * 0.07,
       padding: EdgeInsets.all(3),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30), color: Colors.red),
+          borderRadius: BorderRadius.circular(30),
+          color: Theme.of(context).primaryColor),
       child: CircleAvatar(
         radius: 18,
         backgroundImage: NetworkImage(url),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:minor/screens/homePage/configuration.dart';
-import 'package:minor/screens/homePage/drawerScreen.dart';
-import 'package:minor/screens/homePage/screen2.dart';
+import 'package:minor/screens/homePage/homeScreens/configuration.dart';
+import 'package:minor/screens/homePage/homeScreens/Drawer/drawerScreen.dart';
+import 'package:minor/screens/homePage/petLocator/FoundPet.dart';
 
 class PetLocatorStack extends StatelessWidget {
   @override
@@ -137,7 +137,7 @@ class _PetLocatorState extends State<PetLocator> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Screen2()));
+                      MaterialPageRoute(builder: (context) => FoundPet()));
                 },
                 child: Container(
                   height: medHeight * 0.24,
