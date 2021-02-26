@@ -1,9 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:minor/screens/homePage/screen2.dart';
 
 import 'configuration.dart';
+import 'drawerScreen.dart';
+
+class HomeScreenStack extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      // Here we have two screen Drawer and HomeScreen
+      children: [DrawerScreen(), HomeScreen()],
+    );
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   @override

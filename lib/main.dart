@@ -3,7 +3,7 @@ import 'package:minor/screens/DemoScreen.dart';
 import 'package:minor/screens/authScreens/loginScreen.dart';
 import 'package:minor/screens/authScreens/signupScreen.dart';
 import 'package:minor/screens/homePage/homepage.dart';
-import 'package:minor/screens/homePage/petLocator.dart';
+import 'package:minor/screens/homePage/petLocatorstack.dart';
 import 'package:minor/screens/initalScreens/introscreen.dart';
 
 var routes = <String, WidgetBuilder>{
@@ -11,7 +11,7 @@ var routes = <String, WidgetBuilder>{
   "/login": (BuildContext context) => Loginscreen(),
   "/signup": (BuildContext context) => SignUpScreen(),
   "/homescreen": (BuildContext context) => HomePage(),
-  "/petlocator": (BuildContext context) => PetLocator(),
+  "/petlocator": (BuildContext context) => PetLocatorStack(),
 };
 
 void main() => runApp(new MaterialApp(

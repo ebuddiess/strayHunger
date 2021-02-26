@@ -17,7 +17,7 @@ class MyNavigator {
     Navigator.pushNamed(context, "/homescreen");
   }
 
-  static void goToPetLocator(BuildContext context) {
+  static void goToPetLocatorStack(BuildContext context) {
     Navigator.pushNamed(context, "/petlocator");
   }
 }

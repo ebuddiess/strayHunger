@@ -76,7 +76,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               OutlineButton(
                                 borderSide: BorderSide.none,
                                 onPressed: () {
-                                  MyNavigator.goToPetLocator(context);
+                                  MyNavigator.goToPetLocatorStack(context);
                                 },
                                 child: Row(
                                   children: [
