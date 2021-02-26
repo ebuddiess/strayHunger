@@ -12,4 +12,8 @@ class MyNavigator {
   static void goToSignUP(BuildContext context) {
     Navigator.pushNamed(context, "/signup");
   }
+
+  static void goToHomeScreen(BuildContext context) {
+    Navigator.pushNamed(context, "/homescreen");
+  }
 }

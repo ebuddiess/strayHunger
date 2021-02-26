@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:minor/screens/authScreens/signupScreen.dart';
 import 'package:minor/utility/color_manager.dart';
 import 'package:minor/utility/my_navigator.dart';
 import 'package:minor/widgets/customTextField.dart';
@@ -109,7 +108,9 @@ class Loginscreen extends StatelessWidget {
                       minWidth: MediaQuery.of(context).size.width,
                       height: 55,
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          MyNavigator.goToHomeScreen(context);
+                        },
                         child: Text(
                           'Log in',
                           style: TextStyle(color: Colors.black, fontSize: 22),
