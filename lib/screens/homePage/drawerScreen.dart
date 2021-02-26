@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:minor/utility/my_navigator.dart';
 
 import 'configuration.dart';
 
@@ -75,7 +76,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                               OutlineButton(
                                 borderSide: BorderSide.none,
                                 onPressed: () {
-                                  print(element['title']);
+                                  MyNavigator.goToPetLocator(context);
                                 },
                                 child: Row(
                                   children: [

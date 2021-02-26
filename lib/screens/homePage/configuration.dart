@@ -14,10 +14,14 @@ List<Map> categories = [
 ];
 
 List<Map> drawerItems = [
-  {'icon': FontAwesomeIcons.userFriends, 'title': 'Profile'},
-  {'icon': FontAwesomeIcons.donate, 'title': 'My Donation'},
-  {'icon': FontAwesomeIcons.servicestack, 'title': 'My Services'},
-  {'icon': Icons.favorite, 'title': 'Favorites'},
-  {'icon': Icons.location_searching, 'title': 'Pet Locator'},
-  {'icon': FontAwesomeIcons.facebookMessenger, 'title': 'Messages'},
+  {'icon': FontAwesomeIcons.userFriends, 'title': 'Profile', 'url': '/'},
+  {'icon': FontAwesomeIcons.donate, 'title': 'My Donation', 'url': '/'},
+  {'icon': FontAwesomeIcons.servicestack, 'title': 'My Services', 'url': '/'},
+  {'icon': Icons.favorite, 'title': 'Favorites', 'url': '/'},
+  {
+    'icon': Icons.location_searching,
+    'title': 'Pet Locator',
+    'url': '/petlocator'
+  },
+  {'icon': FontAwesomeIcons.facebookMessenger, 'title': 'Messages', 'url': '/'},
 ];
