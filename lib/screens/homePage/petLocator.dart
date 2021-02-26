@@ -4,12 +4,12 @@ import 'package:minor/screens/homePage/screen2.dart';
 
 import 'configuration.dart';
 
-class HomeScreen extends StatefulWidget {
+class PetLocator extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _PetLocatorState createState() => _PetLocatorState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _PetLocatorState extends State<PetLocator> {
   double xOffset = 0;
   double yOffset = 0;
   double scaleFactor = 1;
