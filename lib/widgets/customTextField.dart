@@ -28,7 +28,7 @@ class CustomTextField extends StatelessWidget {
               filled: true,
               hoverColor: Colors.transparent,
               focusColor: Colors.transparent,
-              fillColor: Colors.white.withOpacity(.3),
+              fillColor: Colors.black.withOpacity(.3),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.transparent),
                 borderRadius: BorderRadius.circular(25),

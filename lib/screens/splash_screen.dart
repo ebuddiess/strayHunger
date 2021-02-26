@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Feeding the hunger ...',
+                    'Feeding the hungry ...',
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: TextStyle(
