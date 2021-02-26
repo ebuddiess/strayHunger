@@ -53,7 +53,7 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
       ),
       body: Stack(
         // Here we have two screen Drawer and HomeScreen
-        children: [DrawerScreen(), HomeScreen()],
+        children: [HomeScreen()],
       ),
     );
   }
@@ -96,80 +96,152 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double medHeight = MediaQuery.of(context).size.height;
 
-    return Container(
+    return AnimatedContainer(
+      curve: Curves.bounceOut,
+      transform: Matrix4.translationValues(xOffset, yOffset, 0)
+        ..scale(scaleFactor)
+        ..rotateZ(isDrawerOpen ? -0.1 : 0),
+      duration: Duration(milliseconds: 100),
+      decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(isDrawerOpen ? 40 : 0.0)),
       padding: EdgeInsets.only(left: 10, right: 10, top: 45),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Stories",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[500]),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 8, bottom: 12),
-            height: 60,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                Stack(
+      //
+      child: Container(
+          height: medHeight,
+          child: Column(
+            children: [
+              SizedBox(
+                height: medHeight * 0.055,
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(
-                          "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        radius: 10,
-                        child: Icon(
-                          Icons.add,
-                          size: 15,
+                    isDrawerOpen
+                        ? IconButton(
+                            icon: Icon(Icons.arrow_back_ios),
+                            onPressed: () {
+                              setState(() {
+                                xOffset = 0;
+                                yOffset = 0;
+                                scaleFactor = 1;
+                                isDrawerOpen = false;
+                              });
+                            },
+                          )
+                        : IconButton(
+                            icon: Icon(Icons.menu),
+                            onPressed: () {
+                              setState(() {
+                                xOffset = 230;
+                                yOffset = 150;
+                                scaleFactor = 0.6;
+                                isDrawerOpen = true;
+                              });
+                            }),
+                    Row(
+                      children: [
+                        Text('Location'),
+                        SizedBox(width: 5),
+                        Icon(
+                          Icons.location_on,
+                          color: Theme.of(context).primaryColor,
                         ),
+                        Text('Delhi'),
+                      ],
+                    ),
+                    CircleAvatar(radius: 30)
+                  ],
+                ),
+              ),
+              // from here
+              Container(
+                padding: EdgeInsets.only(left: 10, right: 10, top: 45),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Stories",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[500]),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8, bottom: 12),
+                      height: 60,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(
+                                    "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: CircleAvatar(
+                                  radius: 10,
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 15,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          buildStoryAvatar(
+                              "https://images.pexels.com/photos/2169434/pexels-photo-2169434.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                          buildStoryAvatar(
+                              "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                          buildStoryAvatar(
+                              "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                          buildStoryAvatar(
+                              "https://images.pexels.com/photos/2092474/pexels-photo-2092474.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                          buildStoryAvatar(
+                              "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 2,
+                      color: Colors.grey[300],
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                    ),
+                    Container(
+                      height: 520,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView(
+                              scrollDirection: Axis.vertical,
+                              padding: EdgeInsets.only(top: 8),
+                              children: [
+                                buildPostSection(
+                                    "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=640",
+                                    "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=940"),
+                                buildPostSection(
+                                    "https://images.pexels.com/photos/206359/pexels-photo-206359.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=940",
+                                    "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                                buildPostSection(
+                                    "https://images.pexels.com/photos/1212600/pexels-photo-1212600.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=200&w=1260",
+                                    "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     )
                   ],
                 ),
-                buildStoryAvatar(
-                    "https://images.pexels.com/photos/2169434/pexels-photo-2169434.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                buildStoryAvatar(
-                    "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                buildStoryAvatar(
-                    "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                buildStoryAvatar(
-                    "https://images.pexels.com/photos/2092474/pexels-photo-2092474.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                buildStoryAvatar(
-                    "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-              ],
-            ),
-          ),
-          Container(
-            height: 2,
-            color: Colors.grey[300],
-            margin: EdgeInsets.symmetric(horizontal: 30),
-          ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.only(top: 8),
-              children: [
-                buildPostSection(
-                    "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=640",
-                    "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=940"),
-                buildPostSection(
-                    "https://images.pexels.com/photos/206359/pexels-photo-206359.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=940",
-                    "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                buildPostSection(
-                    "https://images.pexels.com/photos/1212600/pexels-photo-1212600.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=200&w=1260",
-                    "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          )),
     );
   }
 
