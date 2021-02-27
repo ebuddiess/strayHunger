@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:minor/Models/UserModel.dart';
+import 'package:minor/utility/my_navigator.dart';
 
 import 'Drawer/drawerScreen.dart';
 import 'Profile.dart';
@@ -14,6 +16,11 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
   int _selectedItemIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -21,9 +28,7 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
         height: 50,
         child: FittedBox(
           child: FloatingActionButton(
-            onPressed: () {
-              print("hi");
-            },
+            onPressed: () {},
             child: Icon(
               Icons.add,
             ),
@@ -96,7 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget build(BuildContext context) {
     double medHeight = MediaQuery.of(context).size.height;
-
     return AnimatedContainer(
       curve: Curves.bounceOut,
       transform: Matrix4.translationValues(xOffset, yOffset, 0)

@@ -1,14 +1,20 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:minor/Models/UserModel.dart';
 import 'package:minor/utility/color_manager.dart';
 import 'package:minor/utility/my_navigator.dart';
 import 'package:minor/widgets/customTextField.dart';
 
 class Loginscreen extends StatelessWidget {
+  TextEditingController emailcontroller = new TextEditingController();
+  TextEditingController passwordcontroller = new TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -67,6 +73,7 @@ class Loginscreen extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.065,
                 ),
                 CustomTextField(
+                  controller: emailcontroller,
                   issecured: false,
                   hint: '    Email',
                 ),
@@ -74,6 +81,7 @@ class Loginscreen extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.02,
                 ),
                 CustomTextField(
+                  controller: passwordcontroller,
                   hint: '   Password',
                   issecured: true,
                 ),
@@ -109,7 +117,12 @@ class Loginscreen extends StatelessWidget {
                       height: 55,
                       child: RaisedButton(
                         onPressed: () {
-                          MyNavigator.goToPage(context, '/login');
+                          return validateuser()
+                              ? buildSigninuser(context)
+                              : scaffoldKey.currentState
+                                  .showBottomSheet((context) {
+                                  return buildDisplayModelSheet(context);
+                                });
                         },
                         child: Text(
                           'Log in',
@@ -173,5 +186,80 @@ class Loginscreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget buildDisplayModelSheet(context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      height: 80,
+      color: Colors.white, //could change this to Color(0xFF737373),
+      //so you don't have to change MaterialApp canvasColor
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Email Must be Valid',
+                style: TextStyle(fontFamily: 'Overpass'),
+              ),
+              Text(
+                'Password length must be greater than 5',
+                style: TextStyle(fontFamily: 'Overpass'),
+              ),
+            ],
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Close',
+            ),
+            color: Colors.black,
+            textColor: Colors.white,
+          )
+        ],
+      ),
+    );
+  }
+
+  bool validateuser() {
+    String password = passwordcontroller.text;
+    String email = emailcontroller.text;
+    bool verified = false;
+    if ((email != '') & (password != '')) {
+      verified = true;
+    }
+    return verified;
+  }
+
+  buildSigninuser(context) {
+    String password = passwordcontroller.text;
+    String email = emailcontroller.text;
+    bool registered = false;
+    User.firebaseAuth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .catchError((onError) {
+          scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(onError.message),
+            ),
+          );
+        })
+        .then((authResult) => {
+              if (authResult != null)
+                {
+                  registered = true,
+                }
+            })
+        .whenComplete(() {
+          if (registered) {
+            MyNavigator.goToPage(context, '/homescreen');
+          }
+        });
   }
 }
