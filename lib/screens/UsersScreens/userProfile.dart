@@ -18,6 +18,19 @@ class _UserProfileState extends State<UserProfile> {
   bool isSwitched = false;
   var textValue = 'Ground Buddy';
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    User.firestore
+        .collection("users")
+        .doc(User.currentuserid)
+        .get()
+        .then((value) {
+      namecontroller.text = value.get(FieldPath(['username']));
+    });
+  }
+
   void toggleSwitch(bool value) {
     if (isSwitched == false) {
       setState(() {
@@ -53,69 +66,66 @@ class _UserProfileState extends State<UserProfile> {
               flex: 1,
               child: Container(
                 margin: EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: FutureBuilder(
-                                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {  },
-                                  return Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      _textInput(
-                        hint: "Full Name",
-                        icon: Icons.person,
-                        controller: namecontroller,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    _textInput(
+                      hint: "Full Name",
+                      icon: Icons.person,
+                      controller: namecontroller,
+                    ),
+                    _textInput(
+                        hint: "Phone Number",
+                        icon: Icons.call,
+                        controller: phonecontroller),
+                    _textInput(
+                        hint: "Address",
+                        icon: Icons.location_city,
+                        controller: adresscontroller),
+                    Container(
+                      margin: EdgeInsets.only(top: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.white,
                       ),
-                      _textInput(
-                          hint: "Phone Number",
-                          icon: Icons.call,
-                          controller: phonecontroller),
-                      _textInput(
-                          hint: "Address",
-                          icon: Icons.location_city,
-                          controller: adresscontroller),
-                      Container(
-                        margin: EdgeInsets.only(top: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Colors.white,
-                        ),
-                        padding: EdgeInsets.only(left: 10),
-                        child: Row(
-                          children: [
-                            Switch(
-                              onChanged: toggleSwitch,
-                              value: isSwitched,
-                              activeColor: Theme.of(context).primaryColor,
-                              activeTrackColor: Theme.of(context).accentColor,
-                              inactiveThumbColor: Colors.redAccent,
-                              inactiveTrackColor: Colors.purple,
-                            ),
-                            Text(textValue),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: ButtonWidget(
-                            btnText: "SAVE",
-                            onClick: () {
-                              saveUserDetails(context);
-                            },
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: [
+                          Switch(
+                            onChanged: toggleSwitch,
+                            value: isSwitched,
+                            activeColor: Theme.of(context).primaryColor,
+                            activeTrackColor: Theme.of(context).accentColor,
+                            inactiveThumbColor: Colors.redAccent,
+                            inactiveTrackColor: Colors.purple,
                           ),
+                          Text(textValue),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: ButtonWidget(
+                          btnText: "SAVE",
+                          onClick: () {
+                            saveUserDetails(context);
+                          },
                         ),
                       ),
-                      RichText(
-                        text: TextSpan(children: [
-                          TextSpan(
-                              text: " ", style: TextStyle(color: Colors.black)),
-                          TextSpan(
-                              text: "BACK",
-                              style: TextStyle(color: Colors.pinkAccent)),
-                        ]),
-                      )
-                    ],
-                  ),
+                    ),
+                    RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                            text: " ", style: TextStyle(color: Colors.black)),
+                        TextSpan(
+                            text: "BACK",
+                            style: TextStyle(color: Colors.pinkAccent)),
+                      ]),
+                    )
+                  ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -142,7 +152,7 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Future<void> saveUserDetails(context) async {
+  Future<void> saveUserDetails(context) {
     setState(() {
       User.firestore.collection('users').doc(User.currentuserid).update({
         'username': namecontroller.text,
@@ -151,21 +161,5 @@ class _UserProfileState extends State<UserProfile> {
       }).whenComplete(() => scaffoldKey.currentState
           .showSnackBar(SnackBar(content: Text('Saved'))));
     });
-
-    Map<String, String> data =
-        await getUserdetails(User.currentuserid, 'phone');
-  }
-
-  static Future<Map<String, String>> getUserdetails(
-      documentId, fieldname) async {
-    Map<String, String> data, result;
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    result = await users.doc(documentId).get().then((value) {
-      data = {
-        '$fieldname': value.get(FieldPath([fieldname]))
-      };
-      return data;
-    });
-    return result;
   }
 }

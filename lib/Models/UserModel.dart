@@ -10,14 +10,4 @@ class User {
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   static final firestore = FirebaseFirestore.instance;
   static final currentuserid = FirebaseAuth.instance.currentUser.uid;
-
-  static Map<String, String> getUserDetails(documentId, fieldname) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    users.doc(documentId).get().then((value) {
-      Map<String, String> data = {
-        '$fieldname': value.get(FieldPath([fieldname]))
-      };
-      return data;
-    });
-  }
 }
