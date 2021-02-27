@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 class User {
   String name;
@@ -6,4 +8,16 @@ class User {
   String password;
   String userid;
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  static final firestore = FirebaseFirestore.instance;
+  static final currentuserid = FirebaseAuth.instance.currentUser.uid;
+
+  static Map<String, String> getUserDetails(documentId, fieldname) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    users.doc(documentId).get().then((value) {
+      Map<String, String> data = {
+        '$fieldname': value.get(FieldPath([fieldname]))
+      };
+      return data;
+    });
+  }
 }

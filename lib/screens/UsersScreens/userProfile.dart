@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:minor/Models/UserModel.dart';
 import 'package:minor/widgets/customButton.dart';
 import 'package:minor/widgets/header.dart';
 
@@ -8,9 +10,40 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  TextEditingController namecontroller = TextEditingController();
+  TextEditingController phonecontroller = TextEditingController();
+  TextEditingController adresscontroller = TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool isSwitched = false;
+  var textValue = 'Ground Buddy';
+
+  void toggleSwitch(bool value) {
+    if (isSwitched == false) {
+      setState(() {
+        isSwitched = true;
+        textValue = 'Patron Buddy';
+        User.firestore
+            .collection('users')
+            .doc(User.firebaseAuth.currentUser.uid)
+            .update({'roletype': textValue});
+      });
+    } else {
+      setState(() {
+        isSwitched = false;
+        textValue = 'Ground Buddy';
+        User.firestore
+            .collection('users')
+            .doc(User.firebaseAuth.currentUser.uid)
+            .set({'roletype': textValue});
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       body: Container(
         padding: EdgeInsets.only(bottom: 30),
         child: Column(
@@ -20,34 +53,66 @@ class _UserProfileState extends State<UserProfile> {
               flex: 1,
               child: Container(
                 margin: EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    _textInput(hint: "Fullname", icon: Icons.person),
-                    _textInput(hint: "Email", icon: Icons.email),
-                    _textInput(hint: "Phone Number", icon: Icons.call),
-                    _textInput(hint: "Address", icon: Icons.location_city),
-                    _textInput(hint: "Password", icon: Icons.vpn_key),
-                    Expanded(
-                      child: Center(
-                        child: ButtonWidget(
-                          btnText: "SAVE",
-                          onClick: () {
-                            Navigator.pop(context);
-                          },
+                child: FutureBuilder(
+                                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {  },
+                                  return Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      _textInput(
+                        hint: "Full Name",
+                        icon: Icons.person,
+                        controller: namecontroller,
+                      ),
+                      _textInput(
+                          hint: "Phone Number",
+                          icon: Icons.call,
+                          controller: phonecontroller),
+                      _textInput(
+                          hint: "Address",
+                          icon: Icons.location_city,
+                          controller: adresscontroller),
+                      Container(
+                        margin: EdgeInsets.only(top: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.white,
+                        ),
+                        padding: EdgeInsets.only(left: 10),
+                        child: Row(
+                          children: [
+                            Switch(
+                              onChanged: toggleSwitch,
+                              value: isSwitched,
+                              activeColor: Theme.of(context).primaryColor,
+                              activeTrackColor: Theme.of(context).accentColor,
+                              inactiveThumbColor: Colors.redAccent,
+                              inactiveTrackColor: Colors.purple,
+                            ),
+                            Text(textValue),
+                          ],
                         ),
                       ),
-                    ),
-                    RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: " ", style: TextStyle(color: Colors.black)),
-                        TextSpan(
-                            text: "BACK",
-                            style: TextStyle(color: Colors.pinkAccent)),
-                      ]),
-                    )
-                  ],
+                      Expanded(
+                        child: Center(
+                          child: ButtonWidget(
+                            btnText: "SAVE",
+                            onClick: () {
+                              saveUserDetails(context);
+                            },
+                          ),
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(children: [
+                          TextSpan(
+                              text: " ", style: TextStyle(color: Colors.black)),
+                          TextSpan(
+                              text: "BACK",
+                              style: TextStyle(color: Colors.pinkAccent)),
+                        ]),
+                      )
+                    ],
+                  ),
                 ),
               ),
             )
@@ -57,7 +122,7 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _textInput({controller, hint, icon}) {
+  Widget _textInput({controller, hint, icon, initialvalue}) {
     return Container(
       margin: EdgeInsets.only(top: 15),
       decoration: BoxDecoration(
@@ -66,6 +131,7 @@ class _UserProfileState extends State<UserProfile> {
       ),
       padding: EdgeInsets.only(left: 10),
       child: TextFormField(
+        initialValue: initialvalue,
         controller: controller,
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -74,5 +140,32 @@ class _UserProfileState extends State<UserProfile> {
         ),
       ),
     );
+  }
+
+  Future<void> saveUserDetails(context) async {
+    setState(() {
+      User.firestore.collection('users').doc(User.currentuserid).update({
+        'username': namecontroller.text,
+        'phone': phonecontroller.text,
+        'address': adresscontroller.text
+      }).whenComplete(() => scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text('Saved'))));
+    });
+
+    Map<String, String> data =
+        await getUserdetails(User.currentuserid, 'phone');
+  }
+
+  static Future<Map<String, String>> getUserdetails(
+      documentId, fieldname) async {
+    Map<String, String> data, result;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    result = await users.doc(documentId).get().then((value) {
+      data = {
+        '$fieldname': value.get(FieldPath([fieldname]))
+      };
+      return data;
+    });
+    return result;
   }
 }
