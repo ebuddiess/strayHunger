@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:minor/Models/UserModel.dart';
 import 'package:minor/utility/my_navigator.dart';
 
 import 'detailsPage.dart';
@@ -71,23 +73,39 @@ class _LookupState extends State<Lookup> {
           ),
           SizedBox(height: 15.0),
           Container(
-            height: MediaQuery.of(context).size.height - 158.0,
+            height: MediaQuery.of(context).size.height * 0.85,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
             ),
-            child: ListView(
-              primary: false,
-              padding: EdgeInsets.only(left: 25.0, right: 20.0),
-              children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(top: 45.0),
-                    child: Container(
-                        height: MediaQuery.of(context).size.height - 300.0,
-                        child: ListView(children: [
-                          _buildlookdata(),
-                        ]))),
-              ],
+            child: StreamBuilder<QuerySnapshot>(
+              stream: UserModel.firestore.collection('users').snapshots(),
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasData) {
+                  final List<DocumentSnapshot> documents = snapshot.data.docs;
+                  return ListView.builder(
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot data = documents[index];
+                        return _buildlookdata(
+                            data.get(FieldPath(['username'])),
+                            data.get(
+                              FieldPath(['status']),
+                            ),
+                            data.get(
+                              FieldPath(['city']),
+                            ),
+                            data.get(
+                              FieldPath(['userid']),
+                            ),
+                            data);
+                      });
+                } else if (snapshot.hasError) {
+                  return ListTile(title: Text('No DATA CURRENTLY'));
+                } else if (!snapshot.hasData) {
+                  return ListTile(title: Text('No DATA CURRENTLY'));
+                }
+              },
             ),
           )
         ],
@@ -95,43 +113,72 @@ class _LookupState extends State<Lookup> {
     );
   }
 
-  Widget _buildlookdata() {
+  Widget _buildlookdata(String name, String status, String city, String tag,
+      DocumentSnapshot data) {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) => DetailsPage(
-              //         heroTag: null, foodName: 'Puneet', foodPrice: 'Online')));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailsPage(
+                        heroTag: data.get(FieldPath(['userid'])),
+                        username: data.get(FieldPath(['username'])),
+                        useraddress: data.get(FieldPath(['address'])),
+                        usercity: data.get(FieldPath(['city'])),
+                        useremail: data.get(FieldPath(['email'])),
+                        userphone: data.get(FieldPath(['phone'])),
+                        userpin: data.get(FieldPath(['pin'])),
+                      )));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
+                    padding: EdgeInsets.all(10),
                     child: Row(children: [
-                  Hero(
-                      tag: 1,
-                      child: Image(
-                          image: AssetImage('assets/cat.png'),
-                          fit: BoxFit.cover,
-                          height: 75.0,
-                          width: 75.0)),
-                  SizedBox(width: 10.0),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Puneet',
-                            style: TextStyle(
-                                fontFamily: 'Overpass',
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold)),
-                        Text('Online',
-                            style: TextStyle(
-                                fontFamily: 'Overpass',
-                                fontSize: 15.0,
-                                color: Colors.grey))
-                      ])
-                ])),
+                      Hero(
+                          tag: tag,
+                          child: Image(
+                              image: AssetImage('assets/cat.png'),
+                              fit: BoxFit.cover,
+                              height: 75.0,
+                              width: 75.0)),
+                      SizedBox(width: 10.0),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(name,
+                                style: TextStyle(
+                                    fontFamily: 'Overpass',
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.bold)),
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.green,
+                                  radius: 5,
+                                ),
+                                SizedBox(width: 5),
+                                Text(status,
+                                    style: TextStyle(
+                                        fontFamily: 'Overpass',
+                                        fontSize: 15.0,
+                                        color: Colors.grey)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.location_city, size: 15),
+                                SizedBox(width: 5),
+                                Text(city,
+                                    style: TextStyle(
+                                        fontFamily: 'Overpass',
+                                        fontSize: 15.0,
+                                        color: Colors.grey)),
+                              ],
+                            )
+                          ])
+                    ])),
                 IconButton(
                     icon: Icon(Icons.add),
                     color: Colors.black,

@@ -241,7 +241,7 @@ class Loginscreen extends StatelessWidget {
     String password = passwordcontroller.text;
     String email = emailcontroller.text;
     bool registered = false;
-    User.firebaseAuth
+    UserModel.firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
         .catchError((onError) {
           scaffoldKey.currentState.showSnackBar(

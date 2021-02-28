@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DetailsPage extends StatefulWidget {
-  final heroTag;
-  final foodName;
-  final foodPrice;
+  String heroTag,
+      username,
+      useremail,
+      usercity,
+      userphone,
+      userpin,
+      useraddress;
 
-  DetailsPage({this.heroTag, this.foodName, this.foodPrice});
+  DetailsPage(
+      {this.heroTag,
+      this.username,
+      this.useremail,
+      this.usercity,
+      this.userphone,
+      this.userpin,
+      this.useraddress});
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  var selectedCard = 'WEIGHT';
+  var selectedCard = 'ANIMAL FEEDED';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF7A9BEE),
+        backgroundColor: Theme.of(context).accentColor,
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
@@ -28,12 +40,6 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: Text('Details',
-              style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 18.0,
-                  color: Colors.white)),
-          centerTitle: true,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.more_horiz),
@@ -45,11 +51,11 @@ class _DetailsPageState extends State<DetailsPage> {
         body: ListView(children: [
           Stack(children: [
             Container(
-                height: MediaQuery.of(context).size.height - 82.0,
+                height: MediaQuery.of(context).size.height * 0.90,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.transparent),
             Positioned(
-                top: 75.0,
+                top: 15.0,
                 child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -57,7 +63,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           topRight: Radius.circular(45.0),
                         ),
                         color: Colors.white),
-                    height: MediaQuery.of(context).size.height - 100.0,
+                    height: MediaQuery.of(context).size.height * 100,
                     width: MediaQuery.of(context).size.width)),
             Positioned(
                 top: 30.0,
@@ -67,80 +73,57 @@ class _DetailsPageState extends State<DetailsPage> {
                     child: Container(
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage(widget.heroTag),
-                                fit: BoxFit.cover)),
-                        height: 200.0,
-                        width: 200.0))),
+                                image: AssetImage('assets/cat.png'),
+                                fit: BoxFit.fill)),
+                        height: MediaQuery.of(context).size.height * 0.22,
+                        width: MediaQuery.of(context).size.width * 0.4))),
             Positioned(
-                top: 250.0,
-                left: 25.0,
+                top: MediaQuery.of(context).size.height * 0.28,
+                left: MediaQuery.of(context).size.height * 0.02,
                 right: 25.0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(widget.foodName,
+                    Text(widget.username,
                         style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'Overpass',
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold)),
                     SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(widget.foodPrice,
+                        Text(widget.useremail,
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 20.0,
+                                fontFamily: 'Overpass',
+                                fontSize: 15.0,
                                 color: Colors.grey)),
                         Container(height: 25.0, color: Colors.grey, width: 1.0),
                         Container(
-                          width: 125.0,
-                          height: 40.0,
+                          width: MediaQuery.of(context).size.height * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.04,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(17.0),
-                              color: Color(0xFF7A9BEE)),
+                              color: Colors.purple),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  height: 25.0,
-                                  width: 25.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                      color: Color(0xFF7A9BEE)),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.remove,
-                                      color: Colors.white,
-                                      size: 20.0,
-                                    ),
-                                  ),
+                              Container(
+                                child: OutlineButton(
+                                  borderSide: BorderSide.none,
+                                  onPressed: () {
+                                    print("hello");
+                                  },
+                                  child: Text('Request',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Overpass',
+                                          fontSize: 15.0)),
                                 ),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                    color: Colors.purple),
                               ),
-                              Text('2',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 15.0)),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  height: 25.0,
-                                  width: 25.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                      color: Colors.white),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Color(0xFF7A9BEE),
-                                      size: 20.0,
-                                    ),
-                                  ),
-                                ),
-                              )
                             ],
                           ),
                         )
@@ -148,46 +131,27 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     SizedBox(height: 20.0),
                     Container(
-                        height: 150.0,
+                        height: MediaQuery.of(context).size.height * 0.40,
                         child: ListView(
-                          scrollDirection: Axis.horizontal,
+                          scrollDirection: Axis.vertical,
                           children: <Widget>[
-                            _buildInfoCard('WEIGHT', '300', 'G'),
-                            SizedBox(width: 10.0),
-                            _buildInfoCard('CALORIES', '267', 'CAL'),
-                            SizedBox(width: 10.0),
-                            _buildInfoCard('VITAMINS', 'A, B6', 'VIT'),
-                            SizedBox(width: 10.0),
-                            _buildInfoCard('AVAIL', 'NO', 'AV')
+                            _buildInfoCard('Animal Feeded', '300'),
+                            SizedBox(height: 20.0),
+                            _buildInfoCard('CITY', '267'),
+                            SizedBox(height: 20.0),
+                            _buildInfoCard('Pincode', 'A'),
+                            SizedBox(height: 20.0),
+                            _buildInfoCard('Address', 'NO')
                           ],
                         )),
                     SizedBox(height: 20.0),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 5.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10.0),
-                                topRight: Radius.circular(10.0),
-                                bottomLeft: Radius.circular(25.0),
-                                bottomRight: Radius.circular(25.0)),
-                            color: Colors.black),
-                        height: 50.0,
-                        child: Center(
-                          child: Text('\$52.00',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Montserrat')),
-                        ),
-                      ),
-                    )
                   ],
                 ))
           ])
         ]));
   }
 
-  Widget _buildInfoCard(String cardTitle, String info, String unit) {
+  Widget _buildInfoCard(String cardTitle, String info) {
     return InkWell(
         onTap: () {
           selectCard(cardTitle);
@@ -197,8 +161,7 @@ class _DetailsPageState extends State<DetailsPage> {
             curve: Curves.easeIn,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color:
-                  cardTitle == selectedCard ? Color(0xFF7A9BEE) : Colors.white,
+              color: cardTitle == selectedCard ? Colors.purple : Colors.white,
               border: Border.all(
                   color: cardTitle == selectedCard
                       ? Colors.transparent
@@ -206,7 +169,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   style: BorderStyle.solid,
                   width: 0.75),
             ),
-            height: 100.0,
+            height: MediaQuery.of(context).size.height * 0.10,
             width: 100.0,
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,11 +179,11 @@ class _DetailsPageState extends State<DetailsPage> {
                     padding: const EdgeInsets.only(top: 8.0, left: 15.0),
                     child: Text(cardTitle,
                         style: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'Overpass',
                           fontSize: 12.0,
                           color: cardTitle == selectedCard
                               ? Colors.white
-                              : Colors.grey.withOpacity(0.7),
+                              : Colors.grey.withOpacity(0.9),
                         )),
                   ),
                   Padding(
@@ -230,20 +193,12 @@ class _DetailsPageState extends State<DetailsPage> {
                       children: <Widget>[
                         Text(info,
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'Overpass',
                                 fontSize: 14.0,
                                 color: cardTitle == selectedCard
                                     ? Colors.white
                                     : Colors.black,
                                 fontWeight: FontWeight.bold)),
-                        Text(unit,
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 12.0,
-                              color: cardTitle == selectedCard
-                                  ? Colors.white
-                                  : Colors.black,
-                            ))
                       ],
                     ),
                   )

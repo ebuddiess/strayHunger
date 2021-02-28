@@ -146,7 +146,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               OutlineButton(
                 borderSide: BorderSide.none,
                 onPressed: () {
-                  User.firebaseAuth
+                  UserModel.firebaseAuth
                       .signOut()
                       .whenComplete(() => print("logout"));
                   MyNavigator.goToPage(context, '/login');
@@ -178,18 +178,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
       setState(() {
         isSwitched = true;
         textValue = 'Online';
-        User.firestore
-            .collection('users')
-            .doc(User.firebaseAuth.currentUser.uid)
+        UserModel.firestore
+            .collection('UserModels')
+            .doc(UserModel.firebaseAuth.currentUser.uid)
             .update({'status': textValue});
       });
     } else {
       setState(() {
         isSwitched = false;
         textValue = 'Offline';
-        User.firestore
-            .collection('users')
-            .doc(User.firebaseAuth.currentUser.uid)
+        UserModel.firestore
+            .collection('UserModels')
+            .doc(UserModel.firebaseAuth.currentUser.uid)
             .update({'status': textValue});
       });
     }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minor/Models/UserModel.dart';
 import 'package:minor/widgets/customButton.dart';
@@ -25,9 +26,11 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    User.firestore
+    print("userid" + UserModel.firebaseAuth.currentUser.uid);
+    print(FirebaseAuth.instance.currentUser.uid);
+    UserModel.firestore
         .collection("users")
-        .doc(User.currentuserid)
+        .doc(UserModel.firebaseAuth.currentUser.uid)
         .get()
         .then((value) {
       namecontroller.text = value.get(FieldPath(['username']));
@@ -43,18 +46,18 @@ class _UserProfileState extends State<UserProfile> {
       setState(() {
         isSwitched = true;
         textValue = 'Patron Buddy';
-        User.firestore
+        UserModel.firestore
             .collection('users')
-            .doc(User.firebaseAuth.currentUser.uid)
+            .doc(UserModel.firebaseAuth.currentUser.uid)
             .update({'roletype': textValue});
       });
     } else {
       setState(() {
         isSwitched = false;
         textValue = 'Ground Buddy';
-        User.firestore
+        UserModel.firestore
             .collection('users')
-            .doc(User.firebaseAuth.currentUser.uid)
+            .doc(UserModel.firebaseAuth.currentUser.uid)
             .update({'roletype': textValue});
       });
     }
@@ -169,14 +172,17 @@ class _UserProfileState extends State<UserProfile> {
 
   Future<void> saveUserDetails(context) {
     setState(() {
-      User.firestore.collection('users').doc(User.currentuserid).update({
+      UserModel.firestore
+          .collection('users')
+          .doc(UserModel.firebaseAuth.currentUser.uid)
+          .update({
         'username': namecontroller.text,
         'phone': phonecontroller.text,
         'address': adresscontroller.text,
         'pin': pincontroller.text,
         'city': citycontroller.text,
       }).whenComplete(() => scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text('Saved'))));
+              .showSnackBar(SnackBar(content: Text('Saved'))));
     });
   }
 }
