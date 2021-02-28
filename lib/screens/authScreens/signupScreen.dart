@@ -193,7 +193,9 @@ class SignUpScreen extends StatelessWidget {
                   user.doc(authResult.user.uid).set({
                     'userid': authResult.user.uid,
                     'username': name,
-                    'email': email
+                    'email': email,
+                    'roletype': 'Ground Buddy',
+                    'status': 'Online',
                   }),
                   //user.add(data),
                   registered = true,

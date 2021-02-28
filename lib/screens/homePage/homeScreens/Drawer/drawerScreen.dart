@@ -11,6 +11,9 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
+  bool isSwitched = true;
+  var textValue = 'Online';
+
   @override
   Widget build(BuildContext context) {
     double medheight = MediaQuery.of(context).size.height;
@@ -51,15 +54,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   ),
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: 5,
-                        backgroundColor: Colors.green,
+                      Switch(
+                        onChanged: toggleSwitch,
+                        value: isSwitched,
+                        activeColor: Colors.greenAccent,
+                        activeTrackColor: Colors.lightGreen,
+                        inactiveThumbColor: Colors.redAccent,
+                        inactiveTrackColor: Colors.purple,
                       ),
-                      SizedBox(width: 5),
-                      Text('Online',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
+                      Text(textValue, style: TextStyle(color: Colors.white)),
                     ],
                   )
                 ],
@@ -168,5 +171,27 @@ class _DrawerScreenState extends State<DrawerScreen> {
         ],
       ),
     );
+  }
+
+  void toggleSwitch(bool value) {
+    if (isSwitched == false) {
+      setState(() {
+        isSwitched = true;
+        textValue = 'Online';
+        User.firestore
+            .collection('users')
+            .doc(User.firebaseAuth.currentUser.uid)
+            .update({'status': textValue});
+      });
+    } else {
+      setState(() {
+        isSwitched = false;
+        textValue = 'Offline';
+        User.firestore
+            .collection('users')
+            .doc(User.firebaseAuth.currentUser.uid)
+            .update({'status': textValue});
+      });
+    }
   }
 }

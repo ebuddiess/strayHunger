@@ -55,7 +55,7 @@ class _UserProfileState extends State<UserProfile> {
         User.firestore
             .collection('users')
             .doc(User.firebaseAuth.currentUser.uid)
-            .set({'roletype': textValue});
+            .update({'roletype': textValue});
       });
     }
   }

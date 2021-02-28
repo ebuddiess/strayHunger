@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:minor/Models/UserModel.dart';
@@ -14,11 +15,6 @@ class HomeScreenStack extends StatefulWidget {
 
 class _HomeScreenStackState extends State<HomeScreenStack> {
   int _selectedItemIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
   double yOffset = 0;
   double scaleFactor = 1;
   bool isDrawerOpen = false;
-
+  String city = 'New Delhi';
+  @override
   Widget build(BuildContext context) {
     double medHeight = MediaQuery.of(context).size.height;
     return AnimatedContainer(
@@ -154,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Icons.location_on,
                           color: Theme.of(context).primaryColor,
                         ),
-                        Text('Delhi'),
+                        Text(city),
                       ],
                     ),
                     CircleAvatar(radius: 30)
