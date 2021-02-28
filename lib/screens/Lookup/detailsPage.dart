@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:minor/Models/UserModel.dart';
 
 class DetailsPage extends StatefulWidget {
   String heroTag,
@@ -25,10 +27,35 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   var selectedCard = 'ANIMAL FEEDED';
+  String requestStatus = 'Request';
+  String uid = UserModel.firebaseAuth.currentUser.uid;
+  @override
+  void initState() {
+    super.initState();
+    UserModel.firestore
+        .collection('users')
+        .doc(widget.heroTag)
+        .collection('request')
+        .doc(uid)
+        .snapshots()
+        .listen((event) {
+      if (event.exists) {
+        setState(() {
+          requestStatus = 'Cancel';
+        });
+      } else {
+        setState(() {
+          requestStatus = 'Request';
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+        key: scaffoldKey,
         backgroundColor: Theme.of(context).accentColor,
         appBar: AppBar(
           leading: IconButton(
@@ -112,9 +139,39 @@ class _DetailsPageState extends State<DetailsPage> {
                                 child: OutlineButton(
                                   borderSide: BorderSide.none,
                                   onPressed: () {
-                                    print("hello");
+                                    if (requestStatus.contains('Cancel')) {
+                                      UserModel.firestore
+                                          .collection('users')
+                                          .doc(widget.heroTag)
+                                          .collection('request')
+                                          .doc(uid)
+                                          .delete()
+                                          .whenComplete(() {
+                                        setState(() {
+                                          requestStatus = 'Request';
+                                        });
+                                      });
+                                    } else if (requestStatus
+                                        .contains('Request')) {
+                                      UserModel.firestore
+                                          .collection('users')
+                                          .doc(widget.heroTag)
+                                          .collection('request')
+                                          .doc(uid)
+                                          .set({
+                                            'uid': uid,
+                                            'request-type': 'Service'
+                                          })
+                                          .catchError((error) =>
+                                              {print(error.toString())})
+                                          .whenComplete(() {
+                                            setState(() {
+                                              requestStatus = 'Cancel';
+                                            });
+                                          });
+                                    }
                                   },
-                                  child: Text('Request',
+                                  child: Text(requestStatus,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontFamily: 'Overpass',
@@ -151,13 +208,32 @@ class _DetailsPageState extends State<DetailsPage> {
         ]));
   }
 
+  String buildGetrequestData() {
+    bool completed = false;
+    UserModel.firestore
+        .collection('users')
+        .doc(widget.heroTag)
+        .collection('request')
+        .doc(uid)
+        .get()
+        .then((value) => {
+              if (value.exists) {print('yes')} else {print("no")}
+            })
+        .whenComplete(() => completed = true);
+
+    if (completed) {
+      print('printing first');
+    }
+    return requestStatus;
+  }
+
   Widget _buildInfoCard(String cardTitle, String info) {
     return InkWell(
         onTap: () {
           selectCard(cardTitle);
         },
         child: AnimatedContainer(
-            duration: Duration(milliseconds: 500),
+            duration: Duration(milliseconds: 100),
             curve: Curves.easeIn,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
