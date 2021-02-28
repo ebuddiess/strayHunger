@@ -11,7 +11,7 @@ class DetailsPage extends StatefulWidget {
       userphone,
       userpin,
       useraddress;
-
+  DocumentSnapshot data;
   DetailsPage(
       {this.heroTag,
       this.username,
@@ -19,13 +19,15 @@ class DetailsPage extends StatefulWidget {
       this.usercity,
       this.userphone,
       this.userpin,
-      this.useraddress});
+      this.useraddress,
+      this.data});
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  TextEditingController taskedittext = new TextEditingController();
   var selectedCard = 'ANIMAL FEEDED';
   String requestStatus = 'Request';
   String uid = UserModel.firebaseAuth.currentUser.uid;
@@ -53,6 +55,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
         key: scaffoldKey,
@@ -75,136 +78,150 @@ class _DetailsPageState extends State<DetailsPage> {
             )
           ],
         ),
-        body: ListView(children: [
-          Stack(children: [
-            Container(
-                height: MediaQuery.of(context).size.height * 0.90,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.transparent),
-            Positioned(
-                top: 15.0,
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(45.0),
-                          topRight: Radius.circular(45.0),
-                        ),
-                        color: Colors.white),
-                    height: MediaQuery.of(context).size.height * 100,
-                    width: MediaQuery.of(context).size.width)),
-            Positioned(
-                top: 30.0,
-                left: (MediaQuery.of(context).size.width / 2) - 100.0,
-                child: Hero(
-                    tag: widget.heroTag,
-                    child: Container(
+        body: Stack(children: [
+          Container(
+              height: MediaQuery.of(context).size.height * 0.90,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.transparent),
+          Positioned(
+              top: 15.0,
+              child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(45.0),
+                        topRight: Radius.circular(45.0),
+                      ),
+                      color: Colors.white),
+                  height: MediaQuery.of(context).size.height * 0.9,
+                  width: MediaQuery.of(context).size.width)),
+          Positioned(
+              top: 30.0,
+              left: (MediaQuery.of(context).size.width / 2) - 100.0,
+              child: Hero(
+                  tag: widget.heroTag,
+                  child: Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/cat.png'),
+                              fit: BoxFit.fill)),
+                      height: MediaQuery.of(context).size.height * 0.22,
+                      width: MediaQuery.of(context).size.width * 0.4))),
+          Positioned(
+              top: MediaQuery.of(context).size.height * 0.28,
+              left: MediaQuery.of(context).size.height * 0.02,
+              right: 25.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(widget.username,
+                      style: TextStyle(
+                          fontFamily: 'Overpass',
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(height: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(widget.useremail,
+                          style: TextStyle(
+                              fontFamily: 'Overpass',
+                              fontSize: 15.0,
+                              color: Colors.grey)),
+                      Container(height: 25.0, color: Colors.grey, width: 1.0),
+                      Container(
+                        width: MediaQuery.of(context).size.height * 0.2,
+                        height: MediaQuery.of(context).size.height * 0.04,
                         decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage('assets/cat.png'),
-                                fit: BoxFit.fill)),
-                        height: MediaQuery.of(context).size.height * 0.22,
-                        width: MediaQuery.of(context).size.width * 0.4))),
-            Positioned(
-                top: MediaQuery.of(context).size.height * 0.28,
-                left: MediaQuery.of(context).size.height * 0.02,
-                right: 25.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(widget.username,
-                        style: TextStyle(
-                            fontFamily: 'Overpass',
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold)),
-                    SizedBox(height: 20.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(widget.useremail,
-                            style: TextStyle(
-                                fontFamily: 'Overpass',
-                                fontSize: 15.0,
-                                color: Colors.grey)),
-                        Container(height: 25.0, color: Colors.grey, width: 1.0),
-                        Container(
-                          width: MediaQuery.of(context).size.height * 0.2,
-                          height: MediaQuery.of(context).size.height * 0.04,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(17.0),
-                              color: Colors.purple),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Container(
-                                child: OutlineButton(
-                                  borderSide: BorderSide.none,
-                                  onPressed: () {
-                                    if (requestStatus.contains('Cancel')) {
-                                      UserModel.firestore
-                                          .collection('users')
-                                          .doc(widget.heroTag)
-                                          .collection('request')
-                                          .doc(uid)
-                                          .delete()
-                                          .whenComplete(() {
-                                        setState(() {
-                                          requestStatus = 'Request';
-                                        });
-                                      });
-                                    } else if (requestStatus
-                                        .contains('Request')) {
-                                      UserModel.firestore
-                                          .collection('users')
-                                          .doc(widget.heroTag)
-                                          .collection('request')
-                                          .doc(uid)
-                                          .set({
-                                            'uid': uid,
-                                            'request-type': 'Service'
-                                          })
-                                          .catchError((error) =>
-                                              {print(error.toString())})
-                                          .whenComplete(() {
-                                            setState(() {
-                                              requestStatus = 'Cancel';
-                                            });
-                                          });
-                                    }
-                                  },
-                                  child: Text(requestStatus,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'Overpass',
-                                          fontSize: 15.0)),
-                                ),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7.0),
-                                    color: Colors.purple),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20.0),
-                    Container(
-                        height: MediaQuery.of(context).size.height * 0.40,
-                        child: ListView(
-                          scrollDirection: Axis.vertical,
+                            borderRadius: BorderRadius.circular(17.0),
+                            color: Colors.purple),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            _buildInfoCard('Animal Feeded', '300'),
-                            SizedBox(height: 20.0),
-                            _buildInfoCard('CITY', '267'),
-                            SizedBox(height: 20.0),
-                            _buildInfoCard('Pincode', 'A'),
-                            SizedBox(height: 20.0),
-                            _buildInfoCard('Address', 'NO')
+                            Container(
+                              child: OutlineButton(
+                                borderSide: BorderSide.none,
+                                onPressed: () {
+                                  if (requestStatus.contains('Cancel')) {
+                                    UserModel.firestore
+                                        .collection('users')
+                                        .doc(widget.heroTag)
+                                        .collection('request')
+                                        .doc(uid)
+                                        .delete()
+                                        .whenComplete(() {
+                                      setState(() {
+                                        requestStatus = 'Request';
+                                      });
+                                    });
+                                  } else if (requestStatus
+                                      .contains('Request')) {
+                                    UserModel.firestore
+                                        .collection('users')
+                                        .doc(widget.heroTag)
+                                        .collection('request')
+                                        .doc(uid)
+                                        .set({
+                                          'uid': uid,
+                                          'request-type': 'Service'
+                                        })
+                                        .catchError((error) =>
+                                            {print(error.toString())})
+                                        .whenComplete(() {
+                                          setState(() {
+                                            requestStatus = 'Cancel';
+                                          });
+                                        });
+                                  }
+                                },
+                                child: Text(requestStatus,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Overpass',
+                                        fontSize: 15.0)),
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7.0),
+                                  color: Colors.purple),
+                            ),
                           ],
-                        )),
-                    SizedBox(height: 20.0),
-                  ],
-                ))
-          ])
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                      height: MediaQuery.of(context).size.height * 0.10,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          _buildInfoCard('Animal Feeded', '300'),
+                          SizedBox(width: 5.0),
+                          _buildInfoCard('CITY', widget.usercity),
+                          SizedBox(width: 5.0),
+                          _buildInfoCard('Pincode', widget.userpin),
+                          SizedBox(width: 5.0),
+                          _buildInfoCard('Address', widget.useraddress)
+                        ],
+                      )),
+                  SizedBox(height: 20.0),
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
+                    padding: EdgeInsets.only(left: 10),
+                    child: TextFormField(
+                      controller: taskedittext,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Assign a Task',
+                        prefixIcon: Icon(Icons.ac_unit),
+                      ),
+                    ),
+                  )
+                ],
+              )),
         ]));
   }
 

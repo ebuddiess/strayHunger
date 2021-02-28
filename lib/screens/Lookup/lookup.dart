@@ -128,6 +128,7 @@ class _LookupState extends State<Lookup> {
                         useremail: data.get(FieldPath(['email'])),
                         userphone: data.get(FieldPath(['phone'])),
                         userpin: data.get(FieldPath(['pin'])),
+                        data: data,
                       )));
             },
             child: Row(
