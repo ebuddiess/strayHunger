@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(city),
                       ],
                     ),
-                    CircleAvatar(radius: 30)
+                    buildBuildBadgewidget(),
                   ],
                 ),
               ),
@@ -250,6 +250,49 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           )),
     );
+  }
+
+  Widget buildBuildBadgewidget() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: UserModel.firestore
+            .collection('users')
+            .doc(UserModel.firebaseAuth.currentUser.uid)
+            .collection('request')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            int length = snapshot.data.docs.length;
+            return Stack(
+              children: <Widget>[
+                new IconButton(
+                    icon: Icon(Icons.notifications), onPressed: () {}),
+                Positioned(
+                  right: 11,
+                  top: 11,
+                  child: new Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: new BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 14,
+                      minHeight: 14,
+                    ),
+                    child: Text(
+                      '$length',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        });
   }
 
   Container buildPostSection(String urlPost, String urlProfilePhoto) {
