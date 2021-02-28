@@ -24,10 +24,12 @@ class HeaderContainer extends StatelessWidget {
                 text,
                 style: TextStyle(color: Colors.white, fontSize: 18),
               )),
-          Padding(
-            padding: EdgeInsets.all(20),
+          Container(
             child: Center(
-              child: Image.asset("assets/applogo.png"),
+              child: CircleAvatar(
+                radius: 80,
+                backgroundImage: ExactAssetImage('assets/userprofile.png'),
+              ),
             ),
           ),
         ],

@@ -13,6 +13,9 @@ class _UserProfileState extends State<UserProfile> {
   TextEditingController namecontroller = TextEditingController();
   TextEditingController phonecontroller = TextEditingController();
   TextEditingController adresscontroller = TextEditingController();
+  TextEditingController citycontroller = TextEditingController();
+  TextEditingController pincontroller = TextEditingController();
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool isSwitched = false;
@@ -28,6 +31,10 @@ class _UserProfileState extends State<UserProfile> {
         .get()
         .then((value) {
       namecontroller.text = value.get(FieldPath(['username']));
+      phonecontroller.text = value.get(FieldPath(['phone']));
+      adresscontroller.text = value.get(FieldPath(['address']));
+      citycontroller.text = value.get(FieldPath(['city']));
+      pincontroller.text = value.get(FieldPath(['pin']));
     });
   }
 
@@ -56,6 +63,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       body: Container(
         padding: EdgeInsets.only(bottom: 30),
@@ -80,8 +88,16 @@ class _UserProfileState extends State<UserProfile> {
                         controller: phonecontroller),
                     _textInput(
                         hint: "Address",
-                        icon: Icons.location_city,
+                        icon: Icons.add_road,
                         controller: adresscontroller),
+                    _textInput(
+                        hint: "City",
+                        icon: Icons.location_city_sharp,
+                        controller: citycontroller),
+                    _textInput(
+                        hint: "Pincode",
+                        icon: Icons.pin_drop,
+                        controller: pincontroller),
                     Container(
                       margin: EdgeInsets.only(top: 15),
                       decoration: BoxDecoration(
@@ -113,14 +129,13 @@ class _UserProfileState extends State<UserProfile> {
                         ),
                       ),
                     ),
-                    RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: " ", style: TextStyle(color: Colors.black)),
-                        TextSpan(
-                            text: "BACK",
-                            style: TextStyle(color: Colors.pinkAccent)),
-                      ]),
+                    OutlineButton(
+                      borderSide: BorderSide.none,
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'BACK',
+                        style: TextStyle(color: Colors.pinkAccent),
+                      ),
                     )
                   ],
                 ),
@@ -157,7 +172,9 @@ class _UserProfileState extends State<UserProfile> {
       User.firestore.collection('users').doc(User.currentuserid).update({
         'username': namecontroller.text,
         'phone': phonecontroller.text,
-        'address': adresscontroller.text
+        'address': adresscontroller.text,
+        'pin': pincontroller.text,
+        'city': citycontroller.text,
       }).whenComplete(() => scaffoldKey.currentState
           .showSnackBar(SnackBar(content: Text('Saved'))));
     });
