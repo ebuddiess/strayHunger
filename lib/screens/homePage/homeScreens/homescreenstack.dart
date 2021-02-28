@@ -265,7 +265,10 @@ class _HomeScreenState extends State<HomeScreen> {
             return Stack(
               children: <Widget>[
                 new IconButton(
-                    icon: Icon(Icons.notifications), onPressed: () {}),
+                    icon: Icon(Icons.notifications),
+                    onPressed: () {
+                      MyNavigator.goToPage(context, '/notification');
+                    }),
                 Positioned(
                   right: 11,
                   top: 11,
@@ -291,6 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             );
+          } else {
+            print("no data");
           }
         });
   }

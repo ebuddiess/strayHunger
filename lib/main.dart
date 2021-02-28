@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:minor/screens/DemoScreen.dart';
 import 'package:minor/screens/Lookup/lookup.dart';
+import 'package:minor/screens/Notification/notification.dart';
 import 'package:minor/screens/UsersScreens/userProfile.dart';
 import 'package:minor/screens/authScreens/loginScreen.dart';
 import 'package:minor/screens/authScreens/signupScreen.dart';
@@ -19,6 +20,7 @@ var routes = <String, WidgetBuilder>{
   "/petlocator": (BuildContext context) => PetLocatorStack(),
   "/userProfile": (BuildContext context) => UserProfile(),
   "/lookup": (BuildContext context) => Lookup(),
+  "/notification": (BuildContext context) => BadgeNotification(),
 };
 
 void main() async {
