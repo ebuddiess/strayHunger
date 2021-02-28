@@ -29,7 +29,7 @@ void main() async {
           primaryColor: Colors.pink[500], accentColor: Colors.pink[700]),
       debugShowCheckedModeBanner: false,
       //home: SplashScreen(),
-      home: HomePage(),
+      home: Loginscreen(),
       //home: DemoScreen(),
       routes: routes));
 }

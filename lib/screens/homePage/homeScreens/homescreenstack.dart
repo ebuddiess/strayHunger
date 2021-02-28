@@ -67,7 +67,9 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
         print('hello');
         break;
       case 1:
-        MyNavigator.goToPage(context, '/lookup');
+        Future.delayed(Duration.zero, () {
+          MyNavigator.goToPageViaReplace(context, '/lookup');
+        });
         break;
     }
   }

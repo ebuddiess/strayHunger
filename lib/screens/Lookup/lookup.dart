@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minor/utility/my_navigator.dart';
 
 import 'detailsPage.dart';
 
@@ -10,22 +11,26 @@ class Lookup extends StatefulWidget {
 class _LookupState extends State<Lookup> {
   @override
   Widget build(BuildContext context) {
+    double medheight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Color(0xFF21BFBD),
-      body: ListView(
+      backgroundColor: Theme.of(context).primaryColor,
+      body: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 15.0, left: 10.0),
+            padding: EdgeInsets.only(
+                top: medheight * 0.040, left: medheight * 0.010),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.arrow_back_ios),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    MyNavigator.goToPage(context, '/homescreen');
+                  },
                 ),
                 Container(
-                    width: 125.0,
+                    width: medheight * 0.125,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -44,29 +49,29 @@ class _LookupState extends State<Lookup> {
               ],
             ),
           ),
-          SizedBox(height: 25.0),
+          SizedBox(height: 5.0),
           Padding(
             padding: EdgeInsets.only(left: 40.0),
             child: Row(
               children: <Widget>[
-                Text('Healthy',
+                Text('Ground Hero',
                     style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        fontFamily: 'Overpass',
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 25.0)),
                 SizedBox(width: 10.0),
-                Text('Food',
+                Text('In New Delhi',
                     style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        fontFamily: 'Overpass',
                         color: Colors.white,
                         fontSize: 25.0))
               ],
             ),
           ),
-          SizedBox(height: 40.0),
+          SizedBox(height: 15.0),
           Container(
-            height: MediaQuery.of(context).size.height - 185.0,
+            height: MediaQuery.of(context).size.height - 158.0,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
@@ -80,65 +85,8 @@ class _LookupState extends State<Lookup> {
                     child: Container(
                         height: MediaQuery.of(context).size.height - 300.0,
                         child: ListView(children: [
-                          _buildFoodItem(
-                              'assets/plate1.png', 'Salmon bowl', '\$24.00'),
-                          _buildFoodItem(
-                              'assets/plate2.png', 'Spring bowl', '\$22.00'),
-                          _buildFoodItem(
-                              'assets/plate6.png', 'Avocado bowl', '\$26.00'),
-                          _buildFoodItem(
-                              'assets/plate5.png', 'Berry bowl', '\$24.00')
+                          _buildlookdata(),
                         ]))),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      height: 65.0,
-                      width: 60.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.grey,
-                            style: BorderStyle.solid,
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Center(
-                        child: Icon(Icons.search, color: Colors.black),
-                      ),
-                    ),
-                    Container(
-                      height: 65.0,
-                      width: 60.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.grey,
-                            style: BorderStyle.solid,
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Center(
-                        child: Icon(Icons.shopping_basket, color: Colors.black),
-                      ),
-                    ),
-                    Container(
-                      height: 65.0,
-                      width: 120.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.grey,
-                              style: BorderStyle.solid,
-                              width: 1.0),
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Color(0xFF1C1428)),
-                      child: Center(
-                          child: Text('Checkout',
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.white,
-                                  fontSize: 15.0))),
-                    )
-                  ],
-                )
               ],
             ),
           )
@@ -147,14 +95,14 @@ class _LookupState extends State<Lookup> {
     );
   }
 
-  Widget _buildFoodItem(String imgPath, String foodName, String price) {
+  Widget _buildlookdata() {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailsPage(
-                      heroTag: imgPath, foodName: foodName, foodPrice: price)));
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: (context) => DetailsPage(
+              //         heroTag: null, foodName: 'Puneet', foodPrice: 'Online')));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,9 +110,9 @@ class _LookupState extends State<Lookup> {
                 Container(
                     child: Row(children: [
                   Hero(
-                      tag: imgPath,
+                      tag: 1,
                       child: Image(
-                          image: AssetImage(imgPath),
+                          image: AssetImage('assets/cat.png'),
                           fit: BoxFit.cover,
                           height: 75.0,
                           width: 75.0)),
@@ -172,14 +120,14 @@ class _LookupState extends State<Lookup> {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(foodName,
+                        Text('Puneet',
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'Overpass',
                                 fontSize: 17.0,
                                 fontWeight: FontWeight.bold)),
-                        Text(price,
+                        Text('Online',
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'Overpass',
                                 fontSize: 15.0,
                                 color: Colors.grey))
                       ])
