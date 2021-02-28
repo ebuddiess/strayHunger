@@ -119,17 +119,26 @@ class _LookupState extends State<Lookup> {
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailsPage(
-                        heroTag: data.get(FieldPath(['userid'])),
-                        username: data.get(FieldPath(['username'])),
-                        useraddress: data.get(FieldPath(['address'])),
-                        usercity: data.get(FieldPath(['city'])),
-                        useremail: data.get(FieldPath(['email'])),
-                        userphone: data.get(FieldPath(['phone'])),
-                        userpin: data.get(FieldPath(['pin'])),
-                        data: data,
-                      )));
+              DocumentSnapshot userdata;
+              UserModel.firestore
+                  .collection('users')
+                  .doc(UserModel.firebaseAuth.currentUser.uid)
+                  .get()
+                  .then((value) {
+                userdata = value;
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => DetailsPage(
+                          heroTag: data.get(FieldPath(['userid'])),
+                          username: data.get(FieldPath(['username'])),
+                          useraddress: data.get(FieldPath(['address'])),
+                          usercity: data.get(FieldPath(['city'])),
+                          useremail: data.get(FieldPath(['email'])),
+                          userphone: data.get(FieldPath(['phone'])),
+                          userpin: data.get(FieldPath(['pin'])),
+                          data: data,
+                          currentuserdata: userdata,
+                        )));
+              });
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
