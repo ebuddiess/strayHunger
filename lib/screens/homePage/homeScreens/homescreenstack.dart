@@ -18,6 +18,7 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
 
   @override
   Widget build(BuildContext context) {
+    navbarmethod(context);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
@@ -58,6 +59,17 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
         children: [DrawerScreen(), HomeScreen()],
       ),
     );
+  }
+
+  void navbarmethod(BuildContext context) {
+    switch (_selectedItemIndex) {
+      case 0:
+        print('hello');
+        break;
+      case 1:
+        MyNavigator.goToPage(context, '/lookup');
+        break;
+    }
   }
 
   Widget buildNavBarItem(IconData icon, int index) {

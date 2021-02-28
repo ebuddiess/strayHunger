@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:minor/screens/DemoScreen.dart';
+import 'package:minor/screens/Lookup/lookup.dart';
 import 'package:minor/screens/UsersScreens/userProfile.dart';
 import 'package:minor/screens/authScreens/loginScreen.dart';
 import 'package:minor/screens/authScreens/signupScreen.dart';
@@ -17,6 +18,7 @@ var routes = <String, WidgetBuilder>{
   "/homescreen": (BuildContext context) => HomePage(),
   "/petlocator": (BuildContext context) => PetLocatorStack(),
   "/userProfile": (BuildContext context) => UserProfile(),
+  "/lookup": (BuildContext context) => Lookup(),
 };
 
 void main() async {
@@ -27,7 +29,7 @@ void main() async {
           primaryColor: Colors.pink[500], accentColor: Colors.pink[700]),
       debugShowCheckedModeBanner: false,
       //home: SplashScreen(),
-      home: Loginscreen(),
+      home: HomePage(),
       //home: DemoScreen(),
       routes: routes));
 }
