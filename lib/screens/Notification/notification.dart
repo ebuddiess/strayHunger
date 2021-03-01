@@ -159,8 +159,13 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                                   'Patron Name': data.get(
                                                       FieldPath(['username'])),
                                                   'status': 'incomplete',
-                                                  'task': data.get(
-                                                      FieldPath(['username']))
+                                                  'task': data.get(FieldPath(
+                                                    ['username'],
+                                                  )),
+                                                  'taskcreatedtime':
+                                                      DateTime.now()
+                                                          .toIso8601String(),
+                                                  'taskcompletedtime': ''
                                                 })
                                               })
                                           .whenComplete(() {
@@ -218,7 +223,7 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                         .collection('request')
                                         .doc(documents[index].id)
                                         .delete();
-
+                                    // incrementing total task and total request
                                     int totaltask =
                                         value.get(FieldPath(['totaltask']));
                                     totaltask = totaltask + 1;

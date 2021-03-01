@@ -21,7 +21,7 @@ List<Map> drawerItems = [
   },
   {'icon': FontAwesomeIcons.donate, 'title': 'My Donation', 'url': '/'},
   {'icon': FontAwesomeIcons.servicestack, 'title': 'My Services', 'url': '/'},
-  {'icon': Icons.favorite, 'title': 'Favorites', 'url': '/'},
+  {'icon': Icons.work, 'title': 'My Task', 'url': '/mytask'},
   {
     'icon': Icons.location_searching,
     'title': 'Pet Locator',

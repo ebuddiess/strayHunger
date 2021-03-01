@@ -11,6 +11,7 @@ import 'package:minor/screens/homePage/homeScreens/homepage.dart';
 import 'package:minor/screens/homePage/petLocator/petLocatorstack.dart';
 import 'package:minor/screens/initalScreens/introscreen.dart';
 import 'package:minor/screens/initalScreens/splash_screen.dart';
+import 'package:minor/screens/task/mytask.dart';
 
 var routes = <String, WidgetBuilder>{
   "/intro": (BuildContext context) => IntroScreen(),
@@ -21,6 +22,7 @@ var routes = <String, WidgetBuilder>{
   "/userProfile": (BuildContext context) => UserProfile(),
   "/lookup": (BuildContext context) => Lookup(),
   "/notification": (BuildContext context) => BadgeNotification(),
+  "/mytask": (BuildContext context) => MyTask(),
 };
 
 void main() async {

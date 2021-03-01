@@ -202,7 +202,7 @@ class SignUpScreen extends StatelessWidget {
                     'pin': '',
                     'acceptCount': 0,
                     'rejectCount': 0,
-                    'taskCount': 0,
+                    'completedtask': 0,
                     'totalrequest': 0,
                     'totaltask': 0
                   }),
