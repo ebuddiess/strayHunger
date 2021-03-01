@@ -177,8 +177,10 @@ class _DetailsPageState extends State<DetailsPage> {
                                                 .get(FieldPath(['pin'])),
                                             'phone': widget.currentuserdata
                                                 .get(FieldPath(['phone'])),
-                                            'description':
-                                                taskedittext.text.toString()
+                                            'task':
+                                                taskedittext.text.toString(),
+                                            'date':
+                                                DateTime.now().toIso8601String()
                                           })
                                           .catchError((error) =>
                                               {print(error.toString())})

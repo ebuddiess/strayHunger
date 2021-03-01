@@ -200,6 +200,11 @@ class SignUpScreen extends StatelessWidget {
                     'city': '',
                     'phone': '',
                     'pin': '',
+                    'acceptCount': 0,
+                    'rejectCount': 0,
+                    'taskCount': 0,
+                    'totalrequest': 0,
+                    'totaltask': 0
                   }),
                   //user.add(data),
                   registered = true,
