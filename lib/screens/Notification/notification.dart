@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minor/Models/UserModel.dart';
 import 'package:minor/utility/my_navigator.dart';
@@ -54,7 +55,7 @@ class _BadgeNotificationState extends State<BadgeNotification> {
             padding: EdgeInsets.only(left: 40.0),
             child: Row(
               children: <Widget>[
-                Text('Notification',
+                Text('Request',
                     style: TextStyle(
                         fontFamily: 'Overpass',
                         color: Colors.white,
@@ -112,12 +113,13 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                         .collection('users')
                                         .doc(data.get(FieldPath(['uid'])))
                                         .collection('response')
-                                        .doc(UserModel
-                                            .firebaseAuth.currentUser.uid)
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser.uid)
                                         .set({
-                                      'username':
-                                          data.get(FieldPath(['username'])),
-                                      'uid': data.get(FieldPath(['uid'])),
+                                      'username': FirebaseAuth
+                                          .instance.currentUser.displayName,
+                                      'uid':
+                                          FirebaseAuth.instance.currentUser.uid,
                                       'requestStatus': 'accept',
                                       'taskStatus': 'incomplete',
                                       'responseacceptetime':
@@ -224,7 +226,27 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                             .firebaseAuth.currentUser.uid)
                                         .collection('request')
                                         .doc(documents[index].id)
-                                        .delete();
+                                        .delete()
+                                        .whenComplete(() {
+                                      UserModel.firestore
+                                          .collection('users')
+                                          .doc(data.get(FieldPath(['uid'])))
+                                          .collection('response')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser.uid)
+                                          .set({
+                                        'username': FirebaseAuth
+                                            .instance.currentUser.displayName,
+                                        'uid': FirebaseAuth
+                                            .instance.currentUser.uid,
+                                        'requestStatus': 'reject',
+                                        'taskStatus': 'incomplete',
+                                        'responserejectetime':
+                                            DateTime.now().toIso8601String(),
+                                        'requesttime':
+                                            data.get(FieldPath(['date'])),
+                                      });
+                                    });
                                     // incrementing total task and total request
                                     int totaltask =
                                         value.get(FieldPath(['totaltask']));

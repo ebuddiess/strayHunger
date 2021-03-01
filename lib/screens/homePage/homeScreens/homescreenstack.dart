@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:minor/Models/UserModel.dart';
+import 'package:minor/screens/responsescreen/Response.dart';
 import 'package:minor/utility/my_navigator.dart';
 
 import 'Drawer/drawerScreen.dart';
@@ -49,7 +50,54 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
             buildNavBarItem(Icons.home, 0),
             buildNavBarItem(Icons.search, 1),
             buildNavBarItem(null, -1),
-            buildNavBarItem(Icons.notifications, 2),
+            StreamBuilder<QuerySnapshot>(
+                stream: UserModel.firestore
+                    .collection('users')
+                    .doc(UserModel.firebaseAuth.currentUser.uid)
+                    .collection('response')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    int length = snapshot.data.docs.length;
+                    return Stack(
+                      children: <Widget>[
+                        new IconButton(
+                            icon: Icon(Icons.notifications),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                  new MaterialPageRoute(builder: (contex) {
+                                return new BadgeResponse();
+                              }));
+                            }),
+                        Positioned(
+                          right: 11,
+                          top: 11,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '$length',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    print("no data");
+                  }
+                }),
             buildNavBarItem(Icons.person, 3),
           ],
         ),

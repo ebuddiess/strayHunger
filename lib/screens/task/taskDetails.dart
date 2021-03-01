@@ -271,13 +271,16 @@ class _TaskDetailsState extends State<TaskDetails> {
                               .collection('task')
                               .doc(widget.data.id)
                               .update({
-                            'status': 'complete',
-                            'animalfeeded':
-                                int.parse(animalfeedcontroller.value.text),
-                            'locality': localitycontroller.value.text,
-                            'completeddate': completedtimecontroller.value.text,
-                            'foodprovided': foodprovidedcontroller.value.text
-                          }).whenComplete(() => {
+                                'status': 'complete',
+                                'animalfeeded':
+                                    int.parse(animalfeedcontroller.value.text),
+                                'locality': localitycontroller.value.text,
+                                'completeddate':
+                                    completedtimecontroller.value.text,
+                                'foodprovided':
+                                    foodprovidedcontroller.value.text
+                              })
+                              .whenComplete(() => {
                                     UserModel.firestore
                                         .collection('task')
                                         .doc(widget.data.id)
@@ -291,7 +294,36 @@ class _TaskDetailsState extends State<TaskDetails> {
                                       'foodprovided':
                                           foodprovidedcontroller.value.text
                                     })
-                                  });
+                                  })
+                              .whenComplete(() {
+                                UserModel.firestore
+                                    .collection('users')
+                                    .doc(widget.data
+                                        .get(FieldPath(['Patronid'])))
+                                    .collection('response')
+                                    .doc(uid)
+                                    .update({
+                                  'taskStatus': 'complete',
+                                  'taskcompletingtime':
+                                      DateTime.now().toIso8601String()
+                                });
+                              })
+                              .whenComplete(() {
+                                int completedtask = 0;
+                                UserModel.firestore
+                                    .collection('users')
+                                    .doc(uid)
+                                    .get()
+                                    .then((value) {
+                                  completedtask = value.data()['completedtask'];
+                                }).whenComplete(() {
+                                  completedtask = completedtask + 1;
+                                  UserModel.firestore
+                                      .collection('users')
+                                      .doc(uid)
+                                      .update({'completedtask': completedtask});
+                                });
+                              });
                         },
                         child: Text(
                           'Submit',
