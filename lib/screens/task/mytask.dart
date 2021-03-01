@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minor/Models/UserModel.dart';
+import 'package:minor/screens/task/taskDetails.dart';
 import 'package:minor/utility/my_navigator.dart';
 
 class MyTask extends StatefulWidget {
@@ -81,14 +82,19 @@ class _MyTaskState extends State<MyTask> {
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasData) {
                   final List<DocumentSnapshot> documents = snapshot.data.docs;
-                  return GestureDetector(
-                    onTap: () => print('touched'),
-                    child: ListView.builder(
-                        itemCount: documents.length,
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot data = documents[index];
+                  return ListView.builder(
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot data = documents[index];
 
-                          return Row(
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(new MaterialPageRoute(builder: (context) {
+                              return TaskDetails(data: data);
+                            }));
+                          },
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Container(
@@ -163,9 +169,9 @@ class _MyTaskState extends State<MyTask> {
                                         ])
                                   ])),
                             ],
-                          );
-                        }),
-                  );
+                          ),
+                        );
+                      });
                 } else if (snapshot.hasError) {
                   return ListTile(title: Text('No DATA CURRENTLY'));
                 } else if (!snapshot.hasData) {

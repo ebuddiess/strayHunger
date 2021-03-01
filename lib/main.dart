@@ -12,6 +12,7 @@ import 'package:minor/screens/homePage/petLocator/petLocatorstack.dart';
 import 'package:minor/screens/initalScreens/introscreen.dart';
 import 'package:minor/screens/initalScreens/splash_screen.dart';
 import 'package:minor/screens/task/mytask.dart';
+import 'package:minor/screens/task/taskDetails.dart';
 
 var routes = <String, WidgetBuilder>{
   "/intro": (BuildContext context) => IntroScreen(),
