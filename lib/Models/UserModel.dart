@@ -13,13 +13,4 @@ class UserModel {
 
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   static final firestore = FirebaseFirestore.instance;
-
-  static Future<DocumentSnapshot> getDetails() async {
-    DocumentSnapshot data;
-    data = await UserModel.firestore
-        .collection("users")
-        .doc(UserModel.firebaseAuth.currentUser.uid)
-        .get();
-    return data;
-  }
 }

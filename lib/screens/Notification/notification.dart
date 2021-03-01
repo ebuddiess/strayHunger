@@ -141,7 +141,9 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                                 .get(FieldPath(['username'])),
                                             'status': 'incomplete',
                                             'task': data
-                                                .get(FieldPath(['username']))
+                                                .get(FieldPath(['username'])),
+                                            'taskcreatedtime':
+                                                DateTime.now().toIso8601String()
                                           })
                                           .whenComplete(() => {
                                                 //making a task collection sepearated
