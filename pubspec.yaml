@@ -28,7 +28,7 @@ dependencies:
   cloud_firestore: ^0.16.0+1
   firebase_core : ^0.7.0
   firebase_auth: ^0.20.1
-  image_picker: ^0.6.6+5
+  image_picker: ^0.6.7+22
 
 
 

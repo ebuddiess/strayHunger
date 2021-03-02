@@ -17,8 +17,10 @@ class _HeaderContainerState extends State<HeaderContainer> {
   PickedFile _image;
   final ImagePicker _picker = ImagePicker();
   _imgFromCamera() async {
-    PickedFile image =
-        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+    _image = await _picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 10,
+    );
 
     setState(() {
       uploadedimage = File(_image.path);
@@ -26,8 +28,8 @@ class _HeaderContainerState extends State<HeaderContainer> {
   }
 
   _imgFromGallery() async {
-    PickedFile image =
-        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    _image =
+        await _picker.getImage(source: ImageSource.gallery, imageQuality: 10);
 
     setState(() {
       uploadedimage = File(_image.path);
@@ -52,7 +54,7 @@ class _HeaderContainerState extends State<HeaderContainer> {
               child: FlatButton(
                 color: Colors.purple,
                 onPressed: () {
-                  _imgFromGallery();
+                  buildShowpicker();
                 },
                 child: Text(
                   widget.text,
@@ -61,18 +63,50 @@ class _HeaderContainerState extends State<HeaderContainer> {
               )),
           Container(
             child: Center(
+                child: CircleAvatar(
+              backgroundColor: Colors.pinkAccent,
+              radius: 100,
               child: CircleAvatar(
-                radius: 80,
-                child: ClipOval(
-                  child: (uploadedimage != null)
-                      ? Image.file(uploadedimage)
-                      : Image.asset('assets/cat.png'),
-                ),
+                radius: 98,
+                backgroundImage: Image.file(
+                  uploadedimage,
+                  fit: BoxFit.cover,
+                ).image,
               ),
-            ),
+            )),
           ),
         ],
       ),
     );
+  }
+
+  buildShowpicker() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
