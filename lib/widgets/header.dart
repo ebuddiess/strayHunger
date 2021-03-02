@@ -68,10 +68,15 @@ class _HeaderContainerState extends State<HeaderContainer> {
               radius: 100,
               child: CircleAvatar(
                 radius: 98,
-                backgroundImage: Image.file(
-                  uploadedimage,
-                  fit: BoxFit.cover,
-                ).image,
+                backgroundImage: (uploadedimage != null)
+                    ? Image.file(
+                        uploadedimage,
+                        fit: BoxFit.cover,
+                      ).image
+                    : Image.asset(
+                        'assets/cat.png',
+                        fit: BoxFit.cover,
+                      ).image,
               ),
             )),
           ),
