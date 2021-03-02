@@ -95,7 +95,7 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
                       ],
                     );
                   } else {
-                    print("no data");
+                    Text("no data");
                   }
                 }),
             buildNavBarItem(Icons.person, 3),
@@ -273,21 +273,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         children: [
                           Expanded(
-                            child: ListView(
-                              scrollDirection: Axis.vertical,
-                              padding: EdgeInsets.only(top: 8),
-                              children: [
-                                buildPostSection(
-                                    "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=640",
-                                    "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=940"),
-                                buildPostSection(
-                                    "https://images.pexels.com/photos/206359/pexels-photo-206359.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=940",
-                                    "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                                buildPostSection(
-                                    "https://images.pexels.com/photos/1212600/pexels-photo-1212600.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=200&w=1260",
-                                    "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640"),
-                              ],
-                            ),
+                            child: StreamBuilder<QuerySnapshot>(
+                                stream: UserModel.firestore
+                                    .collection('task')
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  final List<DocumentSnapshot> documents =
+                                      snapshot.data.docs;
+                                  return ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    padding: EdgeInsets.only(top: 8),
+                                    itemCount: documents.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return buildPostSection(
+                                        "https://images.pexels.com/photos/1212600/pexels-photo-1212600.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=200&w=1260",
+                                        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640",
+                                        documents[index],
+                                      );
+                                    },
+                                  );
+                                }),
                           )
                         ],
                       ),
@@ -348,7 +354,8 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  Container buildPostSection(String urlPost, String urlProfilePhoto) {
+  Container buildPostSection(
+      String urlPost, String urlProfilePhoto, DocumentSnapshot data) {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.symmetric(horizontal: 18, vertical: 15),
@@ -359,30 +366,75 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildPostFirstRow(urlProfilePhoto),
-          SizedBox(
-            height: 10,
-          ),
           buildPostPicture(urlPost),
           SizedBox(
             height: 25,
           ),
-          Text(
-            "963 likes",
-            style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800]),
-          ),
-          SizedBox(
-            height: 8,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                buildPostFirstRow(
+                    urlProfilePhoto, data.data()['groundHeroid'], "GroundHero"),
+                SizedBox(
+                  width: 15,
+                ),
+                buildPostFirstRow(
+                    urlProfilePhoto, data.data()['Patronname'], "Patron"),
+                SizedBox(
+                  width: 15,
+                ),
+                builddataRow('Feeded', data.data()['animalfeeded'].toString()),
+                SizedBox(
+                  width: 15,
+                ),
+                builddataRow('Status', data.data()['status'])
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Row buildPostFirstRow(String urlProfilePhoto) {
+  Row builddataRow(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 5,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'Overpass',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[500]),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Row buildPostFirstRow(String urlProfilePhoto, String name, String type) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -398,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Hero(
                 tag: urlProfilePhoto,
                 child: CircleAvatar(
-                  radius: 12,
+                  radius: 10,
                   backgroundImage: NetworkImage(urlProfilePhoto),
                 ),
               ),
@@ -410,24 +462,24 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Tom Smith",
+                  name,
                   style: TextStyle(
                     fontSize: 18,
+                    fontFamily: 'Overpass',
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  "Iceland",
+                  type,
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey[500]),
                 ),
               ],
-            )
+            ),
           ],
         ),
-        Icon(Icons.more_vert)
       ],
     );
   }
@@ -476,5 +528,51 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundImage: NetworkImage(url),
       ),
     );
+  }
+
+  Future<String> getUsername(String uid) async {
+    DocumentSnapshot ds =
+        await UserModel.firestore.collection('users').doc(uid).get();
+    return ds.data()['username'].toString();
+  }
+
+  buildPostGroundRow(String uid) {
+    FutureBuilder<DocumentSnapshot>(
+        future: UserModel.firestore.collection('users').doc(uid).get(),
+        builder: (BuildContext context, snapshot) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        snapshot.data.data()['username'],
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'Overpass',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        snapshot.data.data()['roletype'],
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[500]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
   }
 }
