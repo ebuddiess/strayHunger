@@ -134,61 +134,35 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                           .doc(UserModel
                                               .firebaseAuth.currentUser.uid)
                                           .collection('task')
-                                          .doc(data.get(FieldPath(['uid'])))
+                                          .doc()
                                           .set({
-                                            'groundHeroid': UserModel
-                                                .firebaseAuth.currentUser.uid,
-                                            'Patronid':
-                                                data.get(FieldPath(['uid'])),
-                                            'Patron Name': data
-                                                .get(FieldPath(['username'])),
-                                            'status': 'incomplete',
-                                            'task': data
-                                                .get(FieldPath(['username'])),
-                                            'taskcreatedtime':
-                                                DateTime.now().toIso8601String()
-                                          })
-                                          .whenComplete(() => {
-                                                //making a task collection sepearated
-                                                UserModel.firestore
-                                                    .collection('task')
-                                                    .doc(data.get(
-                                                        FieldPath(['uid'])))
-                                                    .set({
-                                                  'groundHeroid': UserModel
-                                                      .firebaseAuth
-                                                      .currentUser
-                                                      .uid,
-                                                  'Patronid': data
-                                                      .get(FieldPath(['uid'])),
-                                                  'Patron Name': data.get(
-                                                      FieldPath(['username'])),
-                                                  'status': 'incomplete',
-                                                  'task': data.get(FieldPath(
-                                                    ['username'],
-                                                  )),
-                                                  'taskcreatedtime':
-                                                      DateTime.now()
-                                                          .toIso8601String(),
-                                                  'taskcompletedtime': ''
-                                                })
-                                              })
-                                          .whenComplete(() {
-                                            int totaltask = value
-                                                .get(FieldPath(['totaltask']));
-                                            totaltask = totaltask + 1;
-                                            int totalrequest = value.get(
-                                                FieldPath(['totalrequest']));
-                                            totalrequest = totalrequest + 1;
-                                            UserModel.firestore
-                                                .collection('users')
-                                                .doc(UserModel.firebaseAuth
-                                                    .currentUser.uid)
-                                                .update({
-                                              'totaltask': totaltask,
-                                              'totalrequest': totalrequest
-                                            });
-                                          });
+                                        'groundHeroid': UserModel
+                                            .firebaseAuth.currentUser.uid,
+                                        'Patronid':
+                                            data.get(FieldPath(['uid'])),
+                                        'Patron Name':
+                                            data.get(FieldPath(['username'])),
+                                        'status': 'incomplete',
+                                        'task':
+                                            data.get(FieldPath(['username'])),
+                                        'taskcreatedtime':
+                                            DateTime.now().toIso8601String()
+                                      }).whenComplete(() {
+                                        int totaltask =
+                                            value.get(FieldPath(['totaltask']));
+                                        totaltask = totaltask + 1;
+                                        int totalrequest = value
+                                            .get(FieldPath(['totalrequest']));
+                                        totalrequest = totalrequest + 1;
+                                        UserModel.firestore
+                                            .collection('users')
+                                            .doc(UserModel
+                                                .firebaseAuth.currentUser.uid)
+                                            .update({
+                                          'totaltask': totaltask,
+                                          'totalrequest': totalrequest
+                                        });
+                                      });
                                       print(documents[index].id);
 
                                       UserModel.firestore
