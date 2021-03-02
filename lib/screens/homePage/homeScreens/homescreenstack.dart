@@ -370,13 +370,16 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 25,
           ),
-          Padding(
+          Container(
+            height: MediaQuery.of(context).size.height * 0.06,
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
               children: [
                 buildPostFirstRow(
-                    urlProfilePhoto, data.data()['groundHeroid'], "GroundHero"),
+                    urlProfilePhoto,
+                    UserModel.firebaseAuth.currentUser.displayName.toString(),
+                    "GroundHero"),
                 SizedBox(
                   width: 15,
                 ),
@@ -447,12 +450,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (BuildContext context) =>
                         ProfilePage(url: urlProfilePhoto)));
               },
-              child: Hero(
-                tag: urlProfilePhoto,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundImage: NetworkImage(urlProfilePhoto),
-                ),
+              child: CircleAvatar(
+                radius: 10,
+                backgroundImage: NetworkImage(urlProfilePhoto),
               ),
             ),
             SizedBox(

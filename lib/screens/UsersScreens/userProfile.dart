@@ -172,11 +172,13 @@ class _UserProfileState extends State<UserProfile> {
 
   Future<void> saveUserDetails(context) {
     setState(() {
+      UserModel.firebaseAuth.currentUser
+          .updateProfile(displayName: namecontroller.text);
       UserModel.firestore
           .collection('users')
           .doc(UserModel.firebaseAuth.currentUser.uid)
           .update({
-        'username': namecontroller.text,
+        'username': UserModel.firebaseAuth.currentUser.displayName.toString(),
         'phone': phonecontroller.text,
         'address': adresscontroller.text,
         'pin': pincontroller.text,
