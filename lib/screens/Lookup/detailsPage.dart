@@ -161,34 +161,44 @@ class _DetailsPageState extends State<DetailsPage> {
                                         .contains('Request')) {
                                       UserModel.firestore
                                           .collection('users')
-                                          .doc(widget.heroTag)
-                                          .collection('request')
                                           .doc(uid)
-                                          .set({
-                                            'uid': uid,
-                                            'request-type': 'Service',
-                                            'username': widget.currentuserdata
-                                                .get(FieldPath(['username'])),
-                                            'email': UserModel
-                                                .firebaseAuth.currentUser.email,
-                                            'city': widget.currentuserdata
-                                                .get(FieldPath(['city'])),
-                                            'pin': widget.currentuserdata
-                                                .get(FieldPath(['pin'])),
-                                            'phone': widget.currentuserdata
-                                                .get(FieldPath(['phone'])),
-                                            'task':
-                                                taskedittext.text.toString(),
-                                            'date':
-                                                DateTime.now().toIso8601String()
-                                          })
-                                          .catchError((error) =>
-                                              {print(error.toString())})
-                                          .whenComplete(() {
-                                            setState(() {
-                                              requestStatus = 'Cancel';
+                                          .get()
+                                          .then((value) {
+                                        String currentuserprofileimage =
+                                            value.data()['profileimage'];
+                                        UserModel.firestore
+                                            .collection('users')
+                                            .doc(widget.heroTag)
+                                            .collection('request')
+                                            .doc(uid)
+                                            .set({
+                                              'patronimage':
+                                                  currentuserprofileimage,
+                                              'uid': uid,
+                                              'request-type': 'Service',
+                                              'username': widget.currentuserdata
+                                                  .get(FieldPath(['username'])),
+                                              'email': UserModel.firebaseAuth
+                                                  .currentUser.email,
+                                              'city': widget.currentuserdata
+                                                  .get(FieldPath(['city'])),
+                                              'pin': widget.currentuserdata
+                                                  .get(FieldPath(['pin'])),
+                                              'phone': widget.currentuserdata
+                                                  .get(FieldPath(['phone'])),
+                                              'task':
+                                                  taskedittext.text.toString(),
+                                              'date': DateTime.now()
+                                                  .toIso8601String()
+                                            })
+                                            .catchError((error) =>
+                                                {print(error.toString())})
+                                            .whenComplete(() {
+                                              setState(() {
+                                                requestStatus = 'Cancel';
+                                              });
                                             });
-                                          });
+                                      });
                                     }
                                   },
                                   child: Text(requestStatus,
