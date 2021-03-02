@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HeaderContainer extends StatelessWidget {
-  var text = "Login";
+  var text = "";
 
   HeaderContainer(this.text);
 
@@ -20,9 +20,15 @@ class HeaderContainer extends StatelessWidget {
           Positioned(
               bottom: 20,
               right: 20,
-              child: Text(
-                text,
-                style: TextStyle(color: Colors.white, fontSize: 18),
+              child: FlatButton(
+                color: Colors.purple,
+                onPressed: () {
+                  print("ss");
+                },
+                child: Text(
+                  text,
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               )),
           Container(
             child: Center(

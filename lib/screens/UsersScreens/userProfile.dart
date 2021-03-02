@@ -72,7 +72,7 @@ class _UserProfileState extends State<UserProfile> {
         padding: EdgeInsets.only(bottom: 30),
         child: Column(
           children: <Widget>[
-            HeaderContainer("Complete User Profile"),
+            HeaderContainer("Upload"),
             Expanded(
               flex: 1,
               child: Container(
@@ -173,18 +173,20 @@ class _UserProfileState extends State<UserProfile> {
   Future<void> saveUserDetails(context) {
     setState(() {
       UserModel.firebaseAuth.currentUser
-          .updateProfile(displayName: namecontroller.text);
-      UserModel.firestore
-          .collection('users')
-          .doc(UserModel.firebaseAuth.currentUser.uid)
-          .update({
-        'username': UserModel.firebaseAuth.currentUser.displayName.toString(),
-        'phone': phonecontroller.text,
-        'address': adresscontroller.text,
-        'pin': pincontroller.text,
-        'city': citycontroller.text,
-      }).whenComplete(() => scaffoldKey.currentState
-              .showSnackBar(SnackBar(content: Text('Saved'))));
+          .updateProfile(displayName: namecontroller.text)
+          .whenComplete(() {
+        UserModel.firestore
+            .collection('users')
+            .doc(UserModel.firebaseAuth.currentUser.uid)
+            .update({
+          'username': UserModel.firebaseAuth.currentUser.displayName.toString(),
+          'phone': phonecontroller.text,
+          'address': adresscontroller.text,
+          'pin': pincontroller.text,
+          'city': citycontroller.text,
+        }).whenComplete(() => scaffoldKey.currentState
+                .showSnackBar(SnackBar(content: Text('Saved'))));
+      });
     });
   }
 }

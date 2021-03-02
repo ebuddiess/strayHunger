@@ -46,7 +46,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Puneet Pandey',
+                    UserModel.firebaseAuth.currentUser.displayName.toString(),
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
