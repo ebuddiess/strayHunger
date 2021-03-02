@@ -149,7 +149,11 @@ class _LookupState extends State<Lookup> {
                       Hero(
                           tag: tag,
                           child: Image(
-                              image: AssetImage('assets/cat.png'),
+                              image: data.data()['profileimage'].toString() !=
+                                      ''
+                                  ? NetworkImage(
+                                      data.data()['profileimage'].toString())
+                                  : AssetImage('assets/plate3.png'),
                               fit: BoxFit.cover,
                               height: 75.0,
                               width: 75.0)),

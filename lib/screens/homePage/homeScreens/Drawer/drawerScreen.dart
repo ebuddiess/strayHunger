@@ -43,16 +43,29 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       .doc(FirebaseAuth.instance.currentUser.uid)
                       .snapshots(),
                   builder: (context, snapshot) {
-                    return CircleAvatar(
-                      child: CircleAvatar(
+                    if (snapshot.data.data()['profileimage'] != null) {
+                      return CircleAvatar(
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundImage: Image.network(
+                            snapshot.data.data()['profileimage'],
+                            fit: BoxFit.cover,
+                          ).image,
+                        ),
                         radius: 40,
-                        backgroundImage: Image.network(
-                          snapshot.data.data()['profileimage'],
-                          fit: BoxFit.cover,
-                        ).image,
-                      ),
-                      radius: 40,
-                    );
+                      );
+                    } else {
+                      return CircleAvatar(
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundImage: Image.asset(
+                            'assets/cat.png',
+                            fit: BoxFit.cover,
+                          ).image,
+                        ),
+                        radius: 40,
+                      );
+                    }
                   }),
               SizedBox(
                 width: 10,
@@ -61,7 +74,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    UserModel.firebaseAuth.currentUser.displayName.toString(),
+                    UserModel.firebaseAuth.currentUser.displayName == null
+                        ? 'Set Your UserName'
+                        : UserModel.firebaseAuth.currentUser.displayName
+                            .toString(),
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

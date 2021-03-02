@@ -104,7 +104,10 @@ class _DetailsPageState extends State<DetailsPage> {
                     child: Container(
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage('assets/cat.png'),
+                                image: widget.data.data()['profileimage'] != ''
+                                    ? NetworkImage(
+                                        widget.data.data()['profileimage'])
+                                    : AssetImage('assets/cat.png'),
                                 fit: BoxFit.fill)),
                         height: MediaQuery.of(context).size.height * 0.22,
                         width: MediaQuery.of(context).size.width * 0.4))),

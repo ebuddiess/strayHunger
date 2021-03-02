@@ -98,16 +98,29 @@ class _HeaderContainerState extends State<HeaderContainer> {
                         .doc(FirebaseAuth.instance.currentUser.uid)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      return CircleAvatar(
-                        backgroundColor: Colors.pinkAccent,
-                        radius: 100,
-                        child: CircleAvatar(
-                            radius: 98,
-                            backgroundImage: Image.network(
-                              snapshot.data.data()['profileimage'],
-                              fit: BoxFit.cover,
-                            ).image),
-                      );
+                      if (snapshot.data.data()['profileimage'] != null) {
+                        return CircleAvatar(
+                          backgroundColor: Colors.pinkAccent,
+                          radius: 100,
+                          child: CircleAvatar(
+                              radius: 98,
+                              backgroundImage: Image.network(
+                                snapshot.data.data()['profileimage'],
+                                fit: BoxFit.cover,
+                              ).image),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          backgroundColor: Colors.pinkAccent,
+                          radius: 100,
+                          child: CircleAvatar(
+                              radius: 98,
+                              backgroundImage: Image.asset(
+                                'assets/cat.png',
+                                fit: BoxFit.cover,
+                              ).image),
+                        );
+                      }
                     })),
           ),
         ],

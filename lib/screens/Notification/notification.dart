@@ -113,20 +113,30 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                     // generatin a response to the donater who request the provider with status wthere provider accepted it or not
                                     UserModel.firestore
                                         .collection('users')
-                                        .doc(data.get(FieldPath(['uid'])))
-                                        .collection('response')
                                         .doc(FirebaseAuth
                                             .instance.currentUser.uid)
-                                        .set({
-                                      'username': username,
-                                      'uid':
-                                          FirebaseAuth.instance.currentUser.uid,
-                                      'requestStatus': 'accept',
-                                      'taskStatus': 'incomplete',
-                                      'responseacceptetime':
-                                          DateTime.now().toIso8601String(),
-                                      'requesttime':
-                                          data.get(FieldPath(['date'])),
+                                        .get()
+                                        .then((value) {
+                                      UserModel.firestore
+                                          .collection('users')
+                                          .doc(data.get(FieldPath(['uid'])))
+                                          .collection('response')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser.uid)
+                                          .set({
+                                        'username': FirebaseAuth
+                                            .instance.currentUser.displayName,
+                                        'groundheroimage':
+                                            value.data()['profileimage'],
+                                        'uid': FirebaseAuth
+                                            .instance.currentUser.uid,
+                                        'requestStatus': 'accept',
+                                        'taskStatus': 'incomplete',
+                                        'responseacceptetime':
+                                            DateTime.now().toIso8601String(),
+                                        'requesttime':
+                                            data.get(FieldPath(['date'])),
+                                      });
                                     }).whenComplete(() {
                                       //deletin the request when user accept it and generating the task
                                       UserModel.firestore
@@ -209,20 +219,30 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                         .whenComplete(() {
                                       UserModel.firestore
                                           .collection('users')
-                                          .doc(data.get(FieldPath(['uid'])))
-                                          .collection('response')
                                           .doc(FirebaseAuth
                                               .instance.currentUser.uid)
-                                          .set({
-                                        'username': username,
-                                        'uid': FirebaseAuth
-                                            .instance.currentUser.uid,
-                                        'requestStatus': 'reject',
-                                        'taskStatus': 'incomplete',
-                                        'responserejectetime':
-                                            DateTime.now().toIso8601String(),
-                                        'requesttime':
-                                            data.get(FieldPath(['date'])),
+                                          .get()
+                                          .then((value) {
+                                        UserModel.firestore
+                                            .collection('users')
+                                            .doc(data.get(FieldPath(['uid'])))
+                                            .collection('response')
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser.uid)
+                                            .set({
+                                          'username': FirebaseAuth
+                                              .instance.currentUser.displayName,
+                                          'groundheroimage':
+                                              value.data()['profileimage'],
+                                          'uid': FirebaseAuth
+                                              .instance.currentUser.uid,
+                                          'requestStatus': 'reject',
+                                          'taskStatus': 'incomplete',
+                                          'responserejectetime':
+                                              DateTime.now().toIso8601String(),
+                                          'requesttime':
+                                              data.get(FieldPath(['date'])),
+                                        });
                                       });
                                     });
                                     // incrementing total task and total request
@@ -269,8 +289,8 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                       Hero(
                                           tag: 1,
                                           child: Image(
-                                              image:
-                                                  AssetImage('assets/cat.png'),
+                                              image: NetworkImage(data.get(
+                                                  FieldPath(['patronimage']))),
                                               fit: BoxFit.cover,
                                               height: 75.0,
                                               width: 75.0)),

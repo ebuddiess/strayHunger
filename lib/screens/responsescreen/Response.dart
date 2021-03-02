@@ -139,8 +139,9 @@ class _BadgeResponseState extends State<BadgeResponse> {
                                         Hero(
                                             tag: 1,
                                             child: Image(
-                                                image: AssetImage(
-                                                    'assets/cat.png'),
+                                                image: NetworkImage(data.get(
+                                                    FieldPath(
+                                                        ['groundheroimage']))),
                                                 fit: BoxFit.cover,
                                                 height: 75.0,
                                                 width: 75.0)),
