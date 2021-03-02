@@ -100,6 +100,8 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                   // acceptin the ask and increasing acceptcount
                                   int accepted =
                                       value.get(FieldPath(['acceptCount']));
+                                  String username =
+                                      value.get(FieldPath(['username']));
                                   accepted = accepted + 1;
                                   UserModel.firestore
                                       .collection('users')
@@ -116,8 +118,7 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                         .doc(FirebaseAuth
                                             .instance.currentUser.uid)
                                         .set({
-                                      'username': FirebaseAuth
-                                          .instance.currentUser.displayName,
+                                      'username': username,
                                       'uid':
                                           FirebaseAuth.instance.currentUser.uid,
                                       'requestStatus': 'accept',
@@ -211,6 +212,8 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                     .then((value) {
                                   int rejectcount =
                                       value.get(FieldPath(['rejectCount']));
+                                  String username =
+                                      value.get(FieldPath(['username']));
                                   rejectcount = rejectcount + 1;
 
                                   UserModel.firestore
@@ -235,8 +238,7 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                           .doc(FirebaseAuth
                                               .instance.currentUser.uid)
                                           .set({
-                                        'username': FirebaseAuth
-                                            .instance.currentUser.displayName,
+                                        'username': username,
                                         'uid': FirebaseAuth
                                             .instance.currentUser.uid,
                                         'requestStatus': 'reject',

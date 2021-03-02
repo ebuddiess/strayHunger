@@ -95,7 +95,10 @@ class _BadgeResponseState extends State<BadgeResponse> {
                           print(responsetype);
                         }
                         return AbsorbPointer(
-                          absorbing: false,
+                          absorbing: (data.data()['taskStatus'] == 'complete' ||
+                                  data.data()['requestStatus'] == 'reject')
+                              ? false
+                              : true,
                           child: Dismissible(
                               direction: DismissDirection.endToStart,
                               key: Key(documents[index]
