@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:minor/Models/UserModel.dart';
@@ -35,10 +37,23 @@ class _DrawerScreenState extends State<DrawerScreen> {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                child: Icon(FontAwesomeIcons.userCheck),
-                radius: 40,
-              ),
+              StreamBuilder<DocumentSnapshot>(
+                  stream: UserModel.firestore
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    return CircleAvatar(
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundImage: Image.network(
+                          snapshot.data.data()['profileimage'],
+                          fit: BoxFit.cover,
+                        ).image,
+                      ),
+                      radius: 40,
+                    );
+                  }),
               SizedBox(
                 width: 10,
               ),

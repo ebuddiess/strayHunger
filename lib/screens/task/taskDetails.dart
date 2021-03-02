@@ -273,6 +273,8 @@ class _TaskDetailsState extends State<TaskDetails> {
                               .collection('task')
                               .doc(widget.data.id)
                               .set({
+                            'profileimage':
+                                widget.data.get(FieldPath(['patronimage'])),
                             'Patronid':
                                 widget.data.get(FieldPath(['Patronid'])),
                             'groundHeroid':

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:minor/Models/UserModel.dart';
@@ -370,32 +371,41 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 25,
           ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.06,
-            padding: const EdgeInsets.all(8.0),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                buildPostFirstRow(
-                    urlProfilePhoto,
-                    UserModel.firebaseAuth.currentUser.displayName.toString(),
-                    "GroundHero"),
-                SizedBox(
-                  width: 15,
-                ),
-                buildPostFirstRow(
-                    urlProfilePhoto, data.data()['Patronname'], "Patron"),
-                SizedBox(
-                  width: 15,
-                ),
-                builddataRow('Feeded', data.data()['animalfeeded'].toString()),
-                SizedBox(
-                  width: 15,
-                ),
-                builddataRow('Status', data.data()['status'])
-              ],
-            ),
-          ),
+          StreamBuilder<DocumentSnapshot>(
+              stream: UserModel.firestore
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      buildPostFirstRow(
+                          snapshot.data.data()['profileimage'],
+                          UserModel.firebaseAuth.currentUser.displayName
+                              .toString(),
+                          "GroundHero"),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      buildPostFirstRow(data.data()['profileimage'],
+                          data.data()['Patronname'], "Patron"),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      builddataRow(
+                          'Feeded', data.data()['animalfeeded'].toString()),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      builddataRow('Status', data.data()['status'])
+                    ],
+                  ),
+                );
+              }),
         ],
       ),
     );

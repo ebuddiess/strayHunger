@@ -136,6 +136,8 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                           .collection('task')
                                           .doc()
                                           .set({
+                                        'patronimage': data
+                                            .get(FieldPath(['profileimage'])),
                                         'groundHeroid': UserModel
                                             .firebaseAuth.currentUser.uid,
                                         'Patronid':
