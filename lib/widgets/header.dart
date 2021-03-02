@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:minor/Models/UserModel.dart';
 
 class HeaderContainer extends StatefulWidget {
   var text = "";
@@ -16,6 +20,7 @@ class _HeaderContainerState extends State<HeaderContainer> {
   File uploadedimage;
   PickedFile _image;
   final ImagePicker _picker = ImagePicker();
+
   _imgFromCamera() async {
     _image = await _picker.getImage(
       source: ImageSource.camera,
@@ -24,6 +29,18 @@ class _HeaderContainerState extends State<HeaderContainer> {
 
     setState(() {
       uploadedimage = File(_image.path);
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref =
+          storage.ref().child("userprofile" + DateTime.now().toString());
+      UploadTask uploadTask = ref.putFile(uploadedimage);
+      uploadTask.then((res) {
+        res.ref.getDownloadURL().then((value) {
+          UserModel.firestore
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .update({'profileimage': value});
+        });
+      });
     });
   }
 
@@ -33,6 +50,18 @@ class _HeaderContainerState extends State<HeaderContainer> {
 
     setState(() {
       uploadedimage = File(_image.path);
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref =
+          storage.ref().child("userprofile" + DateTime.now().toString());
+      UploadTask uploadTask = ref.putFile(uploadedimage);
+      uploadTask.then((res) {
+        res.ref.getDownloadURL().then((value) {
+          UserModel.firestore
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .update({'profileimage': value});
+        });
+      });
     });
   }
 
@@ -63,22 +92,23 @@ class _HeaderContainerState extends State<HeaderContainer> {
               )),
           Container(
             child: Center(
-                child: CircleAvatar(
-              backgroundColor: Colors.pinkAccent,
-              radius: 100,
-              child: CircleAvatar(
-                radius: 98,
-                backgroundImage: (uploadedimage != null)
-                    ? Image.file(
-                        uploadedimage,
-                        fit: BoxFit.cover,
-                      ).image
-                    : Image.asset(
-                        'assets/cat.png',
-                        fit: BoxFit.cover,
-                      ).image,
-              ),
-            )),
+                child: StreamBuilder<DocumentSnapshot>(
+                    stream: UserModel.firestore
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      return CircleAvatar(
+                        backgroundColor: Colors.pinkAccent,
+                        radius: 100,
+                        child: CircleAvatar(
+                            radius: 98,
+                            backgroundImage: Image.network(
+                              snapshot.data.data()['profileimage'],
+                              fit: BoxFit.cover,
+                            ).image),
+                      );
+                    })),
           ),
         ],
       ),
