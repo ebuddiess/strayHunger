@@ -1,9 +1,38 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class HeaderContainer extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+class HeaderContainer extends StatefulWidget {
   var text = "";
 
   HeaderContainer(this.text);
+
+  @override
+  _HeaderContainerState createState() => _HeaderContainerState();
+}
+
+class _HeaderContainerState extends State<HeaderContainer> {
+  File uploadedimage;
+  PickedFile _image;
+  final ImagePicker _picker = ImagePicker();
+  _imgFromCamera() async {
+    PickedFile image =
+        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+
+    setState(() {
+      uploadedimage = File(_image.path);
+    });
+  }
+
+  _imgFromGallery() async {
+    PickedFile image =
+        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      uploadedimage = File(_image.path);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +52,10 @@ class HeaderContainer extends StatelessWidget {
               child: FlatButton(
                 color: Colors.purple,
                 onPressed: () {
-                  print("ss");
+                  _imgFromGallery();
                 },
                 child: Text(
-                  text,
+                  widget.text,
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               )),
@@ -34,7 +63,11 @@ class HeaderContainer extends StatelessWidget {
             child: Center(
               child: CircleAvatar(
                 radius: 80,
-                backgroundImage: ExactAssetImage('assets/userprofile.png'),
+                child: ClipOval(
+                  child: (uploadedimage != null)
+                      ? Image.file(uploadedimage)
+                      : Image.asset('assets/cat.png'),
+                ),
               ),
             ),
           ),
