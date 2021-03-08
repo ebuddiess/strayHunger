@@ -79,7 +79,12 @@ class _LookupState extends State<Lookup> {
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
             ),
             child: StreamBuilder<QuerySnapshot>(
-              stream: UserModel.firestore.collection('users').snapshots(),
+              stream: UserModel.firestore
+                  .collection('users')
+                  .where('userid',
+                      isNotEqualTo:
+                          UserModel.firebaseAuth.currentUser.uid.toString())
+                  .snapshots(),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasData) {
                   final List<DocumentSnapshot> documents = snapshot.data.docs;
@@ -87,6 +92,8 @@ class _LookupState extends State<Lookup> {
                       itemCount: documents.length,
                       itemBuilder: (context, index) {
                         DocumentSnapshot data = documents[index];
+                        print(data.data()['username']);
+
                         return _buildlookdata(
                             data.get(FieldPath(['username'])),
                             data.get(

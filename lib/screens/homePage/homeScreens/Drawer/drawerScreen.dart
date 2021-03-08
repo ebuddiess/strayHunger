@@ -75,7 +75,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 children: [
                   Text(
                     UserModel.firebaseAuth.currentUser.displayName == null
-                        ? 'Set Your UserName'
+                        ? 'Hi User'
                         : UserModel.firebaseAuth.currentUser.displayName
                             .toString(),
                     style: TextStyle(
