@@ -94,8 +94,8 @@ class _HomeScreenStackState extends State<HomeScreenStack> {
                         ),
                       ],
                     );
-                  } else {
-                    Text("no data");
+                  } else if (!snapshot.hasData || snapshot.hasError) {
+                    return Container();
                   }
                 }),
             buildNavBarItem(Icons.person, 3),
@@ -278,21 +278,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .collection('task')
                                     .snapshots(),
                                 builder: (context, snapshot) {
-                                  final List<DocumentSnapshot> documents =
-                                      snapshot.data.docs;
-                                  return ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    padding: EdgeInsets.only(top: 8),
-                                    itemCount: documents.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return buildPostSection(
-                                        "https://images.pexels.com/photos/1212600/pexels-photo-1212600.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=200&w=1260",
-                                        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640",
-                                        documents[index],
-                                      );
-                                    },
-                                  );
+                                  if (snapshot.hasData) {
+                                    final List<DocumentSnapshot> documents =
+                                        snapshot.data.docs;
+                                    return ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      padding: EdgeInsets.only(top: 8),
+                                      itemCount: documents.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return buildPostSection(
+                                          "https://images.pexels.com/photos/1212600/pexels-photo-1212600.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=200&w=1260",
+                                          "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640",
+                                          documents[index],
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    return CircularProgressIndicator();
+                                  }
                                 }),
                           )
                         ],
@@ -349,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             );
           } else {
-            print("no data");
+            return Container();
           }
         });
   }
