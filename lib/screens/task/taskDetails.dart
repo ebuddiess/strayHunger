@@ -267,7 +267,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                           child: OutlineButton(
                         borderSide: BorderSide.none,
                         onPressed: () {
-                          print(widget.data.id);
+                          print(widget.data.data());
                           //started
                           UserModel.firestore
                               .collection('task')
@@ -277,8 +277,10 @@ class _TaskDetailsState extends State<TaskDetails> {
                                 widget.data.get(FieldPath(['patronimage'])),
                             'Patronid':
                                 widget.data.get(FieldPath(['Patronid'])),
-                            'groundHeroid':
-                                widget.data.get(FieldPath(['groundHeroid'])),
+                            'groundHeroimage':
+                                widget.data.get(FieldPath(['groundheroimage'])),
+                            'groundHeroname':
+                                widget.data.get(FieldPath(['groundheroname'])),
                             'Patronname':
                                 widget.data.get(FieldPath(['Patron Name'])),
                             'groundHeroid':

@@ -141,24 +141,35 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                       //deletin the request when user accept it and generating the task
                                       UserModel.firestore
                                           .collection('users')
-                                          .doc(UserModel
-                                              .firebaseAuth.currentUser.uid)
-                                          .collection('task')
-                                          .doc()
-                                          .set({
-                                        'patronimage': data
-                                            .get(FieldPath(['patronimage'])),
-                                        'groundHeroid': UserModel
-                                            .firebaseAuth.currentUser.uid,
-                                        'Patronid':
-                                            data.get(FieldPath(['uid'])),
-                                        'Patron Name':
-                                            data.get(FieldPath(['username'])),
-                                        'status': 'incomplete',
-                                        'task':
-                                            data.get(FieldPath(['username'])),
-                                        'taskcreatedtime':
-                                            DateTime.now().toIso8601String()
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser.uid)
+                                          .get()
+                                          .then((value) {
+                                        UserModel.firestore
+                                            .collection('users')
+                                            .doc(UserModel
+                                                .firebaseAuth.currentUser.uid)
+                                            .collection('task')
+                                            .doc()
+                                            .set({
+                                          'groundheroimage':
+                                              value.data()['profileimage'],
+                                          'groundheroname':
+                                              value.data()['username'],
+                                          'patronimage': data
+                                              .get(FieldPath(['patronimage'])),
+                                          'groundHeroid': UserModel
+                                              .firebaseAuth.currentUser.uid,
+                                          'Patronid':
+                                              data.get(FieldPath(['uid'])),
+                                          'Patron Name':
+                                              data.get(FieldPath(['username'])),
+                                          'status': 'incomplete',
+                                          'task':
+                                              data.get(FieldPath(['username'])),
+                                          'taskcreatedtime':
+                                              DateTime.now().toIso8601String()
+                                        });
                                       }).whenComplete(() {
                                         int totaltask =
                                             value.get(FieldPath(['totaltask']));

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:minor/Models/UserModel.dart';
@@ -380,15 +381,28 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                buildPostFirstRow(
-                    urlProfilePhoto,
-                    UserModel.firebaseAuth.currentUser.displayName.toString(),
-                    "GroundHero"),
+                data
+                        .data()['groundHeroid']
+                        .toString()
+                        .contains(FirebaseAuth.instance.currentUser.uid)
+                    ? buildPostFirstRow(
+                        data.data()['groundHeroimage'],
+                        UserModel.firebaseAuth.currentUser.displayName
+                            .toString(),
+                        "GroundHero")
+                    : buildPostFirstRow(data.data()['profileimage'],
+                        data.data()['Patronname'], "Patron"),
                 SizedBox(
                   width: 15,
                 ),
-                buildPostFirstRow(
-                    urlProfilePhoto, data.data()['Patronname'], "Patron"),
+                data
+                        .data()['groundHeroid']
+                        .toString()
+                        .contains(FirebaseAuth.instance.currentUser.uid)
+                    ? buildPostFirstRow(data.data()['profileimage'],
+                        data.data()['Patronname'], "Patron")
+                    : buildPostFirstRow(data.data()['groundHeroimage'],
+                        data.data()['groundHeroname'], "GroundHero"),
                 SizedBox(
                   width: 15,
                 ),
@@ -396,7 +410,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   width: 15,
                 ),
-                builddataRow('Status', data.data()['status'])
               ],
             ),
           ),
@@ -472,6 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontFamily: 'Overpass',
                     fontWeight: FontWeight.bold,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   type,
