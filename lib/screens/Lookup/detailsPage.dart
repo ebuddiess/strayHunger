@@ -47,8 +47,18 @@ class _DetailsPageState extends State<DetailsPage> {
           requestStatus = 'Cancel';
         });
       } else {
-        setState(() {
-          requestStatus = 'Request';
+        UserModel.firestore
+            .collection('users')
+            .doc(UserModel.firebaseAuth.currentUser.uid)
+            .collection('response')
+            .doc(widget.data.data()['userid'])
+            .get()
+            .then((value) {
+          if (value.data()['taskStatus'] == 'incomplete') {
+            setState(() {
+              requestStatus = 'Pending';
+            });
+          }
         });
       }
     });
@@ -152,8 +162,6 @@ class _DetailsPageState extends State<DetailsPage> {
                                 child: OutlineButton(
                                   borderSide: BorderSide.none,
                                   onPressed: () {
-                                    print(widget.currentuserdata
-                                        .get(FieldPath(['city'])));
                                     if (requestStatus.contains('Cancel')) {
                                       UserModel.firestore
                                           .collection('users')
