@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -60,7 +62,7 @@ class _TaskDetailsState extends State<TaskDetails> {
               child: Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.4,
                 color: Colors.blueGrey[300],
               ),
               Expanded(
@@ -87,18 +89,35 @@ class _TaskDetailsState extends State<TaskDetails> {
               ),
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.2,
-            margin: EdgeInsets.only(top: 0),
-            child: uploadedimage != null
-                ? Image.file(uploadedimage)
-                : Image.asset('assets/pet-cat2.png'),
-          ),
+          StreamBuilder<DocumentSnapshot>(
+              stream: UserModel.firestore
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser.uid)
+                  .collection('task')
+                  .doc(widget.data.id)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 0),
+                    child: snapshot.data.data()['taskimage'] != null
+                        ? Image.network(
+                            snapshot.data.data()['taskimage'],
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset('assets/pet-cat2.png'),
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
+              }),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.55,
               child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Column(
@@ -287,6 +306,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                               .collection('task')
                               .doc(widget.data.id)
                               .set({
+                            'taskimage': widget.data.data()['taskimage'],
                             'profileimage':
                                 widget.data.get(FieldPath(['patronimage'])),
                             'Patronid':
@@ -381,6 +401,20 @@ class _TaskDetailsState extends State<TaskDetails> {
 
     setState(() {
       uploadedimage = File(_image.path);
+
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("task/" + widget.data.id.toString());
+      UploadTask uploadTask = ref.putFile(uploadedimage);
+      uploadTask.then((res) {
+        res.ref.getDownloadURL().then((value) {
+          UserModel.firestore
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection('task')
+              .doc(widget.data.id)
+              .update({'taskimage': value});
+        });
+      });
     });
   }
 
@@ -390,6 +424,19 @@ class _TaskDetailsState extends State<TaskDetails> {
 
     setState(() {
       uploadedimage = File(_image.path);
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("task/" + widget.data.id.toString());
+      UploadTask uploadTask = ref.putFile(uploadedimage);
+      uploadTask.then((res) {
+        res.ref.getDownloadURL().then((value) {
+          UserModel.firestore
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection('task')
+              .doc(widget.data.id)
+              .update({'taskimage': value});
+        });
+      });
     });
   }
 

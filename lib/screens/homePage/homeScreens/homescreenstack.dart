@@ -289,8 +289,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         return buildPostSection(
-                                          "https://images.pexels.com/photos/1212600/pexels-photo-1212600.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=200&w=1260",
-                                          "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=640",
                                           documents[index],
                                         );
                                       },
@@ -359,8 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  Container buildPostSection(
-      String urlPost, String urlProfilePhoto, DocumentSnapshot data) {
+  Container buildPostSection(DocumentSnapshot data) {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.symmetric(horizontal: 18, vertical: 15),
@@ -371,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildPostPicture(urlPost),
+          buildPostPicture(data.data()['taskimage']),
           SizedBox(
             height: 25,
           ),
