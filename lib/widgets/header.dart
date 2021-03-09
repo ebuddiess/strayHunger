@@ -30,8 +30,8 @@ class _HeaderContainerState extends State<HeaderContainer> {
     setState(() {
       uploadedimage = File(_image.path);
       FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref =
-          storage.ref().child("userprofile" + DateTime.now().toString());
+      Reference ref = storage.ref().child(
+          "userprofile/" + FirebaseAuth.instance.currentUser.uid.toString());
       UploadTask uploadTask = ref.putFile(uploadedimage);
       uploadTask.then((res) {
         res.ref.getDownloadURL().then((value) {

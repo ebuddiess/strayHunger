@@ -6,11 +6,18 @@ import 'package:minor/utility/color_manager.dart';
 import 'package:minor/utility/my_navigator.dart';
 import 'package:minor/widgets/customTextField.dart';
 
-class Loginscreen extends StatelessWidget {
-  TextEditingController emailcontroller = new TextEditingController();
-  TextEditingController passwordcontroller = new TextEditingController();
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+class Loginscreen extends StatefulWidget {
+  @override
+  _LoginscreenState createState() => _LoginscreenState();
+}
 
+class _LoginscreenState extends State<Loginscreen> {
+  TextEditingController emailcontroller = new TextEditingController();
+
+  TextEditingController passwordcontroller = new TextEditingController();
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  bool showbar = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +25,7 @@ class Loginscreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/background.png'), fit: BoxFit.cover),
@@ -30,12 +38,10 @@ class Loginscreen extends StatelessWidget {
           child: Center(
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                ),
+                SizedBox(),
                 Container(
+                  height: MediaQuery.of(context).size.height * 0.34,
                   margin: EdgeInsets.only(bottom: 10),
-                  height: MediaQuery.of(context).size.height * 0.210,
                   child: Image.asset(
                     'assets/signin.png',
                   ),
@@ -43,7 +49,7 @@ class Loginscreen extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 40,
+                      width: MediaQuery.of(context).size.width * 0.09,
                     ),
                     Text(
                       'Welcome Back',
@@ -55,38 +61,30 @@ class Loginscreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
-                ),
+                SizedBox(),
                 Row(
                   children: <Widget>[
-                    SizedBox(
-                      width: 40,
-                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.09),
                     Text(
                       'Sign in with your account',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     )
                   ],
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.065,
-                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 CustomTextField(
                   controller: emailcontroller,
                   issecured: false,
                   hint: '    Email',
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
-                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 CustomTextField(
                   controller: passwordcontroller,
                   hint: '   Password',
                   issecured: true,
                 ),
                 SizedBox(
-                  height: 20,
+                  height: MediaQuery.of(context).size.height * 0.03,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -114,9 +112,11 @@ class Loginscreen extends StatelessWidget {
                   child: ButtonTheme(
                       buttonColor: Colors.white,
                       minWidth: MediaQuery.of(context).size.width,
-                      height: 55,
                       child: RaisedButton(
                         onPressed: () {
+                          setState(() {
+                            showbar = true;
+                          });
                           return validateuser()
                               ? buildSigninuser(context)
                               : scaffoldKey.currentState
@@ -124,16 +124,28 @@ class Loginscreen extends StatelessWidget {
                                   return buildDisplayModelSheet(context);
                                 });
                         },
-                        child: Text(
-                          'Log in',
-                          style: TextStyle(color: Colors.black, fontSize: 22),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Log in',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 22),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: showbar
+                                  ? CircularProgressIndicator()
+                                  : Container(),
+                            ),
+                          ],
                         ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                       )),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
+                  height: 30,
                 ),
                 Center(
                   child: Text(
@@ -154,7 +166,7 @@ class Loginscreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.025,
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -190,8 +202,8 @@ class Loginscreen extends StatelessWidget {
 
   Widget buildDisplayModelSheet(context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.1,
       padding: EdgeInsets.all(10),
-      height: 80,
       color: Colors.white, //could change this to Color(0xFF737373),
       //so you don't have to change MaterialApp canvasColor
       child: new Row(
@@ -214,6 +226,9 @@ class Loginscreen extends StatelessWidget {
           ),
           FlatButton(
             onPressed: () {
+              setState(() {
+                showbar = false;
+              });
               Navigator.pop(context);
             },
             child: Text(

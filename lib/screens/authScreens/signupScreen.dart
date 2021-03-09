@@ -4,13 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:minor/utility/my_navigator.dart';
 import 'package:minor/widgets/customTextField.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController emailcontroller = new TextEditingController();
+
   TextEditingController namecontroller = new TextEditingController();
+
   TextEditingController passwordcontroller = new TextEditingController();
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
   final user = FirebaseFirestore.instance.collection('users');
+
+  bool show = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +106,9 @@ class SignUpScreen extends StatelessWidget {
                       height: 55,
                       child: RaisedButton(
                         onPressed: () {
+                          setState(() {
+                            show = true;
+                          });
                           return validateuser()
                               ? registeruser(context)
                               : scaffoldKey.currentState
@@ -109,6 +124,12 @@ class SignUpScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(25)),
                       )),
                 ),
+                SizedBox(height: 20),
+                show
+                    ? CircularProgressIndicator(
+                        backgroundColor: Colors.black,
+                      )
+                    : Container()
               ],
             ),
           ),
@@ -147,6 +168,9 @@ class SignUpScreen extends StatelessWidget {
           ),
           FlatButton(
             onPressed: () {
+              setState(() {
+                show = false;
+              });
               Navigator.pop(context);
             },
             child: Text(
@@ -208,12 +232,6 @@ class SignUpScreen extends StatelessWidget {
                   }),
                   //user.add(data),
                   registered = true,
-                  scaffoldKey.currentState.showSnackBar(
-                    SnackBar(
-                      duration: Duration(seconds: 1),
-                      content: Text('Registered Successfully'),
-                    ),
-                  )
                 }
             })
         .whenComplete(() {
