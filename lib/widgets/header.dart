@@ -50,9 +50,10 @@ class _HeaderContainerState extends State<HeaderContainer> {
 
     setState(() {
       uploadedimage = File(_image.path);
+
       FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref =
-          storage.ref().child("userprofile" + DateTime.now().toString());
+      Reference ref = storage.ref().child(
+          "userprofile/" + FirebaseAuth.instance.currentUser.uid.toString());
       UploadTask uploadTask = ref.putFile(uploadedimage);
       uploadTask.then((res) {
         res.ref.getDownloadURL().then((value) {
@@ -68,7 +69,7 @@ class _HeaderContainerState extends State<HeaderContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.34,
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: [
             Theme.of(context).primaryColor,
@@ -98,28 +99,32 @@ class _HeaderContainerState extends State<HeaderContainer> {
                         .doc(FirebaseAuth.instance.currentUser.uid)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (snapshot.data.data()['profileimage'] != null) {
-                        return CircleAvatar(
-                          backgroundColor: Colors.pinkAccent,
-                          radius: 100,
-                          child: CircleAvatar(
-                              radius: 98,
-                              backgroundImage: Image.network(
-                                snapshot.data.data()['profileimage'],
-                                fit: BoxFit.cover,
-                              ).image),
-                        );
+                      if (snapshot.hasData) {
+                        if (snapshot.data.data()['profileimage'] != null) {
+                          return CircleAvatar(
+                            backgroundColor: Colors.pinkAccent,
+                            radius: 100,
+                            child: CircleAvatar(
+                                radius: 98,
+                                backgroundImage: Image.network(
+                                  snapshot.data.data()['profileimage'],
+                                  fit: BoxFit.cover,
+                                ).image),
+                          );
+                        } else {
+                          return CircleAvatar(
+                            backgroundColor: Colors.pinkAccent,
+                            radius: 100,
+                            child: CircleAvatar(
+                                radius: 98,
+                                backgroundImage: Image.asset(
+                                  'assets/cat.png',
+                                  fit: BoxFit.cover,
+                                ).image),
+                          );
+                        }
                       } else {
-                        return CircleAvatar(
-                          backgroundColor: Colors.pinkAccent,
-                          radius: 100,
-                          child: CircleAvatar(
-                              radius: 98,
-                              backgroundImage: Image.asset(
-                                'assets/cat.png',
-                                fit: BoxFit.cover,
-                              ).image),
-                        );
+                        return CircularProgressIndicator();
                       }
                     })),
           ),

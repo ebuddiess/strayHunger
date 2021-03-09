@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String city = 'New Delhi';
   @override
   Widget build(BuildContext context) {
-    double medHeight = MediaQuery.of(context).size.height;
+    double medHeight = MediaQuery.of(context).size.height * 0.95;
     return AnimatedContainer(
       curve: Curves.bounceOut,
       transform: Matrix4.translationValues(xOffset, yOffset, 0)
