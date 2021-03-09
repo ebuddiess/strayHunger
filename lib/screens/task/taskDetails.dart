@@ -25,6 +25,8 @@ class _TaskDetailsState extends State<TaskDetails> {
 
   File uploadedimage;
   PickedFile _image;
+  String _uploadStatus = 'Upload';
+
   final ImagePicker _picker = ImagePicker();
 
   DateTime _selectedDate = DateTime.now();
@@ -64,6 +66,9 @@ class _TaskDetailsState extends State<TaskDetails> {
 
   @override
   Widget build(BuildContext context) {
+    widget.data.data()['taskimage'] != ''
+        ? _uploadStatus = 'Change'
+        : _uploadStatus = ' Upload';
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -132,7 +137,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                     height: MediaQuery.of(context).size.height * 0.4,
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.only(top: 0),
-                    child: snapshot.data.data()['taskimage'] != null
+                    child: snapshot.data.data()['taskimage'] != ''
                         ? Image.network(
                             snapshot.data.data()['taskimage'],
                             fit: BoxFit.cover,
@@ -171,7 +176,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                             onPressed: () {
                               buildShowpicker();
                             },
-                            child: Text('Upload'),
+                            child: Text(_uploadStatus),
                           ),
                         ],
                       ),

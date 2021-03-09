@@ -102,19 +102,23 @@ class _MyTaskState extends State<MyTask> {
                                   child: Row(children: [
                                     Hero(
                                         tag: data.id,
-                                        child:
-                                            data.data()['patronimage'] != null
-                                                ? Image.network(
+                                        child: data.data()['patronimage'] !=
+                                                null
+                                            ? ClipOval(
+                                                child: Image.network(
                                                     data.data()['patronimage'],
                                                     fit: BoxFit.cover,
                                                     height: 75.0,
-                                                    width: 75.0)
-                                                : Image(
+                                                    width: 75.0),
+                                              )
+                                            : ClipOval(
+                                                child: Image(
                                                     image: AssetImage(
                                                         "assets/cat.png"),
                                                     fit: BoxFit.cover,
                                                     height: 75.0,
-                                                    width: 75.0)),
+                                                    width: 75.0),
+                                              )),
                                     SizedBox(width: 10.0),
                                     Column(
                                         crossAxisAlignment:
