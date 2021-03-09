@@ -132,8 +132,13 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                             .instance.currentUser.uid,
                                         'requestStatus': 'accept',
                                         'taskStatus': 'incomplete',
-                                        'responseacceptetime':
-                                            DateTime.now().toIso8601String(),
+                                        'responseacceptetime': DateTime.now()
+                                                .day
+                                                .toString() +
+                                            '/' +
+                                            DateTime.now().month.toString() +
+                                            '/' +
+                                            DateTime.now().year.toString(),
                                         'requesttime':
                                             data.get(FieldPath(['date'])),
                                       });
@@ -167,8 +172,13 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                           'status': 'incomplete',
                                           'task':
                                               data.get(FieldPath(['username'])),
-                                          'taskcreatedtime':
-                                              DateTime.now().toIso8601String()
+                                          'taskcreatedtime': DateTime.now()
+                                                  .day
+                                                  .toString() +
+                                              '/' +
+                                              DateTime.now().month.toString() +
+                                              '/' +
+                                              DateTime.now().year.toString()
                                         });
                                       }).whenComplete(() {
                                         int totaltask =
@@ -249,8 +259,13 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                               .instance.currentUser.uid,
                                           'requestStatus': 'reject',
                                           'taskStatus': 'incomplete',
-                                          'responserejectetime':
-                                              DateTime.now().toIso8601String(),
+                                          'responserejectetime': DateTime.now()
+                                                  .day
+                                                  .toString() +
+                                              '/' +
+                                              DateTime.now().month.toString() +
+                                              '/' +
+                                              DateTime.now().year.toString(),
                                           'requesttime':
                                               data.get(FieldPath(['date'])),
                                         });
@@ -299,12 +314,15 @@ class _BadgeNotificationState extends State<BadgeNotification> {
                                     child: Row(children: [
                                       Hero(
                                           tag: 1,
-                                          child: Image(
-                                              image: NetworkImage(data.get(
-                                                  FieldPath(['patronimage']))),
-                                              fit: BoxFit.cover,
-                                              height: 75.0,
-                                              width: 75.0)),
+                                          child: ClipOval(
+                                            child: Image(
+                                                image: NetworkImage(data.get(
+                                                    FieldPath(
+                                                        ['patronimage']))),
+                                                fit: BoxFit.cover,
+                                                height: 75.0,
+                                                width: 75.0),
+                                          )),
                                       SizedBox(width: 10.0),
                                       Column(
                                           crossAxisAlignment:

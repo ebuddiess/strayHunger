@@ -101,16 +101,19 @@ class _DetailsPageState extends State<DetailsPage> {
                 left: (MediaQuery.of(context).size.width / 2) - 100.0,
                 child: Hero(
                     tag: widget.heroTag,
-                    child: Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: widget.data.data()['profileimage'] != ''
-                                    ? NetworkImage(
-                                        widget.data.data()['profileimage'])
-                                    : AssetImage('assets/cat.png'),
-                                fit: BoxFit.fill)),
-                        height: MediaQuery.of(context).size.height * 0.22,
-                        width: MediaQuery.of(context).size.width * 0.4))),
+                    child: ClipOval(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: widget.data.data()['profileimage'] !=
+                                          ''
+                                      ? NetworkImage(
+                                          widget.data.data()['profileimage'])
+                                      : AssetImage('assets/cat.png'),
+                                  fit: BoxFit.fill)),
+                          height: MediaQuery.of(context).size.height * 0.20,
+                          width: MediaQuery.of(context).size.width * 0.4),
+                    ))),
             Positioned(
                 top: MediaQuery.of(context).size.height * 0.28,
                 left: MediaQuery.of(context).size.height * 0.02,
@@ -127,12 +130,15 @@ class _DetailsPageState extends State<DetailsPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(widget.useremail,
-                            style: TextStyle(
-                                fontFamily: 'Overpass',
-                                fontSize: 15.0,
-                                color: Colors.grey)),
+                        Flexible(
+                          child: Text(widget.useremail,
+                              style: TextStyle(
+                                  fontFamily: 'Overpass',
+                                  fontSize: 15.0,
+                                  color: Colors.grey)),
+                        ),
                         Container(height: 25.0, color: Colors.grey, width: 1.0),
+                        SizedBox(width: 10),
                         Container(
                           width: MediaQuery.of(context).size.height * 0.2,
                           height: MediaQuery.of(context).size.height * 0.04,
@@ -192,7 +198,14 @@ class _DetailsPageState extends State<DetailsPage> {
                                               'task':
                                                   taskedittext.text.toString(),
                                               'date': DateTime.now()
-                                                  .toIso8601String()
+                                                      .day
+                                                      .toString() +
+                                                  '/' +
+                                                  DateTime.now()
+                                                      .month
+                                                      .toString() +
+                                                  '/' +
+                                                  DateTime.now().year.toString()
                                             })
                                             .catchError((error) =>
                                                 {print(error.toString())})
@@ -221,7 +234,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     SizedBox(height: 20.0),
                     Container(
-                        height: MediaQuery.of(context).size.height * 0.10,
+                        height: MediaQuery.of(context).size.height * 0.12,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[

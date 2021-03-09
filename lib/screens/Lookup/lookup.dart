@@ -16,106 +16,108 @@ class _LookupState extends State<Lookup> {
     double medheight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-                top: medheight * 0.040, left: medheight * 0.010),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  color: Colors.white,
-                  onPressed: () {
-                    MyNavigator.goToPage(context, '/homescreen');
-                  },
-                ),
-                Container(
-                    width: medheight * 0.125,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.filter_list),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding:
+                  EdgeInsets.only(top: medheight * 0, left: medheight * 0.010),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: Colors.white,
+                    onPressed: () {
+                      MyNavigator.goToPage(context, '/homescreen');
+                    },
+                  ),
+                  Container(
+                      width: medheight * 0.125,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.filter_list),
+                            color: Colors.white,
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.menu),
+                            color: Colors.white,
+                            onPressed: () {},
+                          )
+                        ],
+                      ))
+                ],
+              ),
+            ),
+            SizedBox(height: 5.0),
+            Padding(
+              padding: EdgeInsets.only(left: 40.0),
+              child: Row(
+                children: <Widget>[
+                  Text('Ground Hero',
+                      style: TextStyle(
+                          fontFamily: 'Overpass',
                           color: Colors.white,
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.menu),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25.0)),
+                  SizedBox(width: 10.0),
+                  Text('In New Delhi',
+                      style: TextStyle(
+                          fontFamily: 'Overpass',
                           color: Colors.white,
-                          onPressed: () {},
-                        )
-                      ],
-                    ))
-              ],
+                          fontSize: 25.0))
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 5.0),
-          Padding(
-            padding: EdgeInsets.only(left: 40.0),
-            child: Row(
-              children: <Widget>[
-                Text('Ground Hero',
-                    style: TextStyle(
-                        fontFamily: 'Overpass',
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25.0)),
-                SizedBox(width: 10.0),
-                Text('In New Delhi',
-                    style: TextStyle(
-                        fontFamily: 'Overpass',
-                        color: Colors.white,
-                        fontSize: 25.0))
-              ],
-            ),
-          ),
-          SizedBox(height: 15.0),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.85,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
-            ),
-            child: StreamBuilder<QuerySnapshot>(
-              stream: UserModel.firestore
-                  .collection('users')
-                  .where('userid',
-                      isNotEqualTo:
-                          UserModel.firebaseAuth.currentUser.uid.toString())
-                  .snapshots(),
-              builder: (BuildContext context, snapshot) {
-                if (snapshot.hasData) {
-                  final List<DocumentSnapshot> documents = snapshot.data.docs;
-                  return ListView.builder(
-                      itemCount: documents.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot data = documents[index];
-                        print(data.data()['username']);
+            SizedBox(height: 15.0),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.78,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
+              ),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: UserModel.firestore
+                    .collection('users')
+                    .where('userid',
+                        isNotEqualTo:
+                            UserModel.firebaseAuth.currentUser.uid.toString())
+                    .snapshots(),
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.hasData) {
+                    final List<DocumentSnapshot> documents = snapshot.data.docs;
+                    return ListView.builder(
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot data = documents[index];
+                          print(data.data()['username']);
 
-                        return _buildlookdata(
-                            data.get(FieldPath(['username'])),
-                            data.get(
-                              FieldPath(['status']),
-                            ),
-                            data.get(
-                              FieldPath(['city']),
-                            ),
-                            data.get(
-                              FieldPath(['userid']),
-                            ),
-                            data);
-                      });
-                } else if (snapshot.hasError) {
-                  return ListTile(title: Text('No DATA CURRENTLY'));
-                } else if (!snapshot.hasData) {
-                  return ListTile(title: Text('No DATA CURRENTLY'));
-                }
-              },
-            ),
-          )
-        ],
+                          return _buildlookdata(
+                              data.get(FieldPath(['username'])),
+                              data.get(
+                                FieldPath(['status']),
+                              ),
+                              data.get(
+                                FieldPath(['city']),
+                              ),
+                              data.get(
+                                FieldPath(['userid']),
+                              ),
+                              data);
+                        });
+                  } else if (snapshot.hasError) {
+                    return ListTile(title: Text('No DATA CURRENTLY'));
+                  } else if (!snapshot.hasData) {
+                    return ListTile(title: Text('No DATA CURRENTLY'));
+                  }
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -155,15 +157,17 @@ class _LookupState extends State<Lookup> {
                     child: Row(children: [
                       Hero(
                           tag: tag,
-                          child: Image(
-                              image: data.data()['profileimage'].toString() !=
-                                      ''
-                                  ? NetworkImage(
-                                      data.data()['profileimage'].toString())
-                                  : AssetImage('assets/plate3.png'),
-                              fit: BoxFit.cover,
-                              height: 75.0,
-                              width: 75.0)),
+                          child: ClipOval(
+                            child: Image(
+                                image: data.data()['profileimage'].toString() !=
+                                        ''
+                                    ? NetworkImage(
+                                        data.data()['profileimage'].toString())
+                                    : AssetImage('assets/plate3.png'),
+                                fit: BoxFit.cover,
+                                height: 75.0,
+                                width: 75.0),
+                          )),
                       SizedBox(width: 10.0),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
