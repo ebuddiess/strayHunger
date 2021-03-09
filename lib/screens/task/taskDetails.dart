@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:minor/Models/UserModel.dart';
 
 class TaskDetails extends StatefulWidget {
@@ -18,6 +21,9 @@ class _TaskDetailsState extends State<TaskDetails> {
   TextEditingController localitycontroller = new TextEditingController();
   TextEditingController foodprovidedcontroller = new TextEditingController();
   TextEditingController completedtimecontroller = new TextEditingController();
+  File uploadedimage;
+  PickedFile _image;
+  final ImagePicker _picker = ImagePicker();
 
   var selectedCard = 'ANIMAL FEEDED';
   String requestStatus = 'Submit';
@@ -53,10 +59,9 @@ class _TaskDetailsState extends State<TaskDetails> {
           Positioned.fill(
               child: Column(
             children: [
-              Expanded(
-                child: Container(
-                  color: Colors.blueGrey[300],
-                ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.2,
+                color: Colors.blueGrey[300],
               ),
               Expanded(
                 child: Container(
@@ -83,33 +88,42 @@ class _TaskDetailsState extends State<TaskDetails> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Hero(
-                  tag: widget.data.id,
-                  child: Image.asset('assets/pet-cat2.png')),
-            ),
+            height: MediaQuery.of(context).size.height * 0.2,
+            margin: EdgeInsets.only(top: 0),
+            child: uploadedimage != null
+                ? Image.file(uploadedimage)
+                : Image.asset('assets/pet-cat2.png'),
           ),
           Align(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.bottomCenter,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
-              height: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.5,
               child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.verified_user_rounded, size: 15),
-                          SizedBox(width: 5),
-                          Text(widget.data.get(FieldPath(['Patron Name'])),
-                              style: TextStyle(
-                                  fontFamily: 'Overpass',
-                                  fontSize: 17.0,
-                                  fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              Icon(Icons.verified_user_rounded, size: 15),
+                              SizedBox(width: 5),
+                              Text(widget.data.get(FieldPath(['Patron Name'])),
+                                  style: TextStyle(
+                                      fontFamily: 'Overpass',
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          OutlineButton(
+                            onPressed: () {
+                              buildShowpicker();
+                            },
+                            child: Text('Upload'),
+                          ),
                         ],
                       ),
                       SizedBox(width: 5),
@@ -357,5 +371,55 @@ class _TaskDetailsState extends State<TaskDetails> {
         ],
       ),
     );
+  }
+
+  _imgFromCamera() async {
+    _image = await _picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 10,
+    );
+
+    setState(() {
+      uploadedimage = File(_image.path);
+    });
+  }
+
+  _imgFromGallery() async {
+    _image =
+        await _picker.getImage(source: ImageSource.gallery, imageQuality: 10);
+
+    setState(() {
+      uploadedimage = File(_image.path);
+    });
+  }
+
+  buildShowpicker() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
