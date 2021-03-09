@@ -60,7 +60,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           child: CircleAvatar(
                             radius: 40,
                             backgroundImage: Image.asset(
-                              'assets/cat.png',
+                              'assets/user.png',
                               fit: BoxFit.cover,
                             ).image,
                           ),
