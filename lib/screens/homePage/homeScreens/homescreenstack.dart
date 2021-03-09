@@ -465,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ProfilePage(url: urlProfilePhoto)));
               },
               child: CircleAvatar(
-                radius: 10,
+                radius: 15,
                 backgroundImage: NetworkImage(urlProfilePhoto),
               ),
             ),

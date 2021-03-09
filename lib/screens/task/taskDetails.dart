@@ -69,6 +69,7 @@ class _TaskDetailsState extends State<TaskDetails> {
     widget.data.data()['taskimage'] != ''
         ? _uploadStatus = 'Change'
         : _uploadStatus = ' Upload';
+
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
