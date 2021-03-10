@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -31,6 +32,8 @@ class _TaskDetailsState extends State<TaskDetails> {
 
   DateTime _selectedDate = DateTime.now();
 
+  bool showprogress = false;
+
   void _pickDateDialog() {
     showDatePicker(
             context: context,
@@ -59,9 +62,15 @@ class _TaskDetailsState extends State<TaskDetails> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
-    animalfeedcontroller.text = widget.data.data()['animalfeeded'].toString();
-    localitycontroller.text = widget.data.data()['locality'].toString();
-    foodprovidedcontroller.text = widget.data.data()['foodprovided'].toString();
+    animalfeedcontroller.text = widget.data.data()['animalfeeded'] != null
+        ? widget.data.data()['animalfeeded'].toString()
+        : "  ";
+    localitycontroller.text = widget.data.data()['locality'] != null
+        ? widget.data.data()['locality'].toString()
+        : " ";
+    foodprovidedcontroller.text = widget.data.data()['foodprovided'] != null
+        ? widget.data.data()['foodprovided'].toString()
+        : " ";
   }
 
   @override
@@ -138,12 +147,17 @@ class _TaskDetailsState extends State<TaskDetails> {
                     height: MediaQuery.of(context).size.height * 0.4,
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.only(top: 0),
-                    child: snapshot.data.data()['taskimage'] != ''
-                        ? Image.network(
-                            snapshot.data.data()['taskimage'],
+                    child: (snapshot.data.data()['taskimage'] != '' &&
+                            snapshot.data.data()['taskimage'] != null)
+                        ? CachedNetworkImage(
+                            imageUrl: snapshot.data.data()['taskimage'],
                             fit: BoxFit.cover,
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           )
-                        : Image.asset('assets/pet-cat2.png'),
+                        : Image.asset('assets/user.png'),
                   );
                 } else {
                   return CircularProgressIndicator();
@@ -153,7 +167,7 @@ class _TaskDetailsState extends State<TaskDetails> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
-              height: MediaQuery.of(context).size.height * 0.55,
+              height: MediaQuery.of(context).size.height * 0.65,
               child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Column(
@@ -173,12 +187,26 @@ class _TaskDetailsState extends State<TaskDetails> {
                                       fontWeight: FontWeight.bold)),
                             ],
                           ),
-                          OutlineButton(
-                            onPressed: () {
-                              buildShowpicker();
-                            },
-                            child: Text(_uploadStatus),
-                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child: showprogress
+                                      ? CircularProgressIndicator()
+                                      : Container()),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              OutlineButton(
+                                onPressed: () {
+                                  buildShowpicker();
+                                },
+                                child: Text(_uploadStatus),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                       SizedBox(width: 5),
@@ -232,11 +260,12 @@ class _TaskDetailsState extends State<TaskDetails> {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText:
-                                      widget.data.data()['animalfeeded'] != ''
+                                      (widget.data.data()['animalfeeded'] !=
+                                              null)
                                           ? widget.data
                                               .data()['animalfeeded']
                                               .toString()
-                                          : 'Animal Feeded'.toString(),
+                                          : 'Animal Feeded',
                                   prefixIcon: Icon(Icons.donut_large),
                                 ),
                               ),
@@ -382,7 +411,7 @@ class _TaskDetailsState extends State<TaskDetails> {
 
     setState(() {
       uploadedimage = File(_image.path);
-
+      showprogress = true;
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref = storage.ref().child("task/" + widget.data.id.toString());
       UploadTask uploadTask = ref.putFile(uploadedimage);
@@ -410,18 +439,25 @@ class _TaskDetailsState extends State<TaskDetails> {
                       'groundHeroid':
                           widget.data.get(FieldPath(['groundHeroid'])),
                       'status': 'complete',
-                      'foodprovided':
-                          int.parse(animalfeedcontroller.value.text),
+                      'foodprovided': foodprovidedcontroller.value.text,
                       'animalfeeded':
                           int.parse(animalfeedcontroller.value.text),
                       'locality': localitycontroller.value.text,
                       'completeddate': _selectedDate,
                     })
                   });
+          UserModel.firestore
+              .collection('task')
+              .doc(widget.data.id)
+              .update({'taskimage': value});
         });
 
         _scaffoldKey.currentState
             .showSnackBar(SnackBar(content: Text('Uploaded')));
+
+        setState(() {
+          showprogress = false;
+        });
       });
     });
   }
@@ -432,6 +468,7 @@ class _TaskDetailsState extends State<TaskDetails> {
 
     setState(() {
       uploadedimage = File(_image.path);
+      showprogress = true;
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref = storage.ref().child("task/" + widget.data.id.toString());
       UploadTask uploadTask = ref.putFile(uploadedimage);
@@ -453,15 +490,23 @@ class _TaskDetailsState extends State<TaskDetails> {
               'Patronname': widget.data.get(FieldPath(['Patron Name'])),
               'groundHeroid': widget.data.get(FieldPath(['groundHeroid'])),
               'status': 'complete',
-              'foodprovided': int.parse(animalfeedcontroller.value.text),
+              'foodprovided': foodprovidedcontroller.value.text,
               'animalfeeded': int.parse(animalfeedcontroller.value.text),
               'locality': localitycontroller.value.text,
               'completeddate': _selectedDate,
             });
+            UserModel.firestore
+                .collection('task')
+                .doc(widget.data.id)
+                .update({'taskimage': value});
           });
 
           _scaffoldKey.currentState
               .showSnackBar(SnackBar(content: Text('Uploaded')));
+
+          setState(() {
+            showprogress = false;
+          });
         });
       });
     });
@@ -498,61 +543,113 @@ class _TaskDetailsState extends State<TaskDetails> {
   }
 
   saveData() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Saved')));
     //started
-    UserModel.firestore.collection('task').doc(widget.data.id).set({
-      'taskimage': widget.data.data()['taskimage'],
-      'profileimage': widget.data.get(FieldPath(['patronimage'])),
-      'Patronid': widget.data.get(FieldPath(['Patronid'])),
-      'groundHeroimage': widget.data.get(FieldPath(['groundheroimage'])),
-      'groundHeroname': widget.data.get(FieldPath(['groundheroname'])),
-      'Patronname': widget.data.get(FieldPath(['Patron Name'])),
-      'groundHeroid': widget.data.get(FieldPath(['groundHeroid'])),
-      'status': 'complete',
-      'foodprovided': int.parse(animalfeedcontroller.value.text),
-      'animalfeeded': int.parse(animalfeedcontroller.value.text),
-      'locality': localitycontroller.value.text,
-      'completeddate': _selectedDate,
-    }).whenComplete(() {
-      UserModel.firestore
-          .collection('users')
-          .doc(uid)
-          .collection('task')
-          .doc(widget.data.id)
-          .update({
-        'status': 'complete',
-        'animalfeeded': int.parse(animalfeedcontroller.value.text),
-        'locality': localitycontroller.value.text,
-        'completeddate': _selectedDate.day.toString() +
-            "/" +
-            _selectedDate.month.toString() +
-            "/" +
-            _selectedDate.year.toString(),
-        'foodprovided': foodprovidedcontroller.value.text
-      });
-    }).whenComplete(() {
-      UserModel.firestore
-          .collection('users')
-          .doc(widget.data.get(FieldPath(['Patronid'])))
-          .collection('response')
-          .doc(uid)
-          .update({
-        'taskStatus': 'complete',
-        'taskcompletingtime': DateTime.now().toIso8601String()
-      });
-    }).whenComplete(() {
-      int completedtask = 0;
-      UserModel.firestore.collection('users').doc(uid).get().then((value) {
-        completedtask = value.data()['completedtask'];
-      }).whenComplete(() {
-        completedtask = completedtask + 1;
-        UserModel.firestore
-            .collection('users')
-            .doc(uid)
-            .update({'completedtask': completedtask});
-      });
-    });
+    UserModel.firestore
+        .collection('users')
+        .doc(uid)
+        .collection('task')
+        .doc(widget.data.id)
+        .get()
+        .then((value) {
+      if (value.data()['status'] == 'complete' &&
+          value.data()['status'] != null) {
+        _scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text('Saved')));
 
+        UserModel.firestore.collection('task').doc(widget.data.id).set({
+          'taskimage': widget.data.data()['taskimage'],
+          'profileimage': widget.data.get(FieldPath(['patronimage'])),
+          'Patronid': widget.data.get(FieldPath(['Patronid'])),
+          'groundHeroimage': widget.data.get(FieldPath(['groundheroimage'])),
+          'groundHeroname': widget.data.get(FieldPath(['groundheroname'])),
+          'Patronname': widget.data.get(FieldPath(['Patron Name'])),
+          'groundHeroid': widget.data.get(FieldPath(['groundHeroid'])),
+          'status': 'complete',
+          'foodprovided': foodprovidedcontroller.value.text,
+          'animalfeeded': int.parse(animalfeedcontroller.value.text),
+          'locality': localitycontroller.value.text,
+          'completeddate': _selectedDate,
+        }).whenComplete(() {
+          UserModel.firestore
+              .collection('users')
+              .doc(uid)
+              .collection('task')
+              .doc(widget.data.id)
+              .update({
+            'status': 'complete',
+            'animalfeeded': int.parse(animalfeedcontroller.value.text),
+            'locality': localitycontroller.value.text,
+            'completeddate': _selectedDate.day.toString() +
+                "/" +
+                _selectedDate.month.toString() +
+                "/" +
+                _selectedDate.year.toString(),
+            'foodprovided': foodprovidedcontroller.value.text
+          });
+        });
+      } else if (value.data()['status'] != 'complete' &&
+          value.data()['status'] != null) {
+        UserModel.firestore.collection('task').doc(widget.data.id).set({
+          'taskimage': widget.data.data()['taskimage'],
+          'profileimage': widget.data.get(FieldPath(['patronimage'])),
+          'Patronid': widget.data.get(FieldPath(['Patronid'])),
+          'groundHeroimage': widget.data.get(FieldPath(['groundheroimage'])),
+          'groundHeroname': widget.data.get(FieldPath(['groundheroname'])),
+          'Patronname': widget.data.get(FieldPath(['Patron Name'])),
+          'groundHeroid': widget.data.get(FieldPath(['groundHeroid'])),
+          'status': 'complete',
+          'foodprovided': foodprovidedcontroller.value.text,
+          'animalfeeded': int.parse(animalfeedcontroller.value.text),
+          'locality': localitycontroller.value.text,
+          'completeddate': _selectedDate,
+        }).whenComplete(() {
+          UserModel.firestore
+              .collection('users')
+              .doc(uid)
+              .collection('task')
+              .doc(widget.data.id)
+              .update({
+            'status': 'complete',
+            'animalfeeded': int.parse(animalfeedcontroller.value.text),
+            'locality': localitycontroller.value.text,
+            'completeddate': _selectedDate.day.toString() +
+                "/" +
+                _selectedDate.month.toString() +
+                "/" +
+                _selectedDate.year.toString(),
+            'foodprovided': foodprovidedcontroller.value.text
+          });
+        }).whenComplete(() {
+          UserModel.firestore
+              .collection('users')
+              .doc(widget.data.get(FieldPath(['Patronid'])))
+              .collection('response')
+              .doc(uid)
+              .update({
+            'taskStatus': 'complete',
+            'taskcompletingtime': _selectedDate.day.toString() +
+                "/" +
+                _selectedDate.month.toString() +
+                "/" +
+                _selectedDate.year.toString()
+          });
+        }).whenComplete(() {
+          int completedtask = 0;
+          UserModel.firestore.collection('users').doc(uid).get().then((value) {
+            completedtask = value.data()['completedtask'];
+          }).whenComplete(() {
+            completedtask = completedtask + 1;
+            UserModel.firestore
+                .collection('users')
+                .doc(uid)
+                .update({'completedtask': completedtask});
+          });
+
+          _scaffoldKey.currentState
+              .showSnackBar(SnackBar(content: Text('Saved')));
+        });
+      }
+    });
     //ended
   }
 }

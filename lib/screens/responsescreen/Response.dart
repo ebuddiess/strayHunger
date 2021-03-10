@@ -68,7 +68,7 @@ class _BadgeResponseState extends State<BadgeResponse> {
           SizedBox(height: 15.0),
           Container(
             padding: EdgeInsets.all(10),
-            height: MediaQuery.of(context).size.height * 0.85,
+            height: MediaQuery.of(context).size.height * 0.80,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
@@ -136,15 +136,18 @@ class _BadgeResponseState extends State<BadgeResponse> {
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       child: Row(children: [
-                                        Hero(
-                                            tag: 1,
-                                            child: Image(
-                                                image: NetworkImage(data.get(
-                                                    FieldPath(
-                                                        ['groundheroimage']))),
-                                                fit: BoxFit.cover,
-                                                height: 75.0,
-                                                width: 75.0)),
+                                        ClipOval(
+                                          child: Hero(
+                                              tag: 1,
+                                              child: Image(
+                                                  image: NetworkImage(data.get(
+                                                      FieldPath([
+                                                    'groundheroimage'
+                                                  ]))),
+                                                  fit: BoxFit.cover,
+                                                  height: 75.0,
+                                                  width: 75.0)),
+                                        ),
                                         SizedBox(width: 10.0),
                                         Column(
                                             crossAxisAlignment:

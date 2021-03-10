@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,13 +31,17 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   TextEditingController taskedittext = new TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   var selectedCard = 'ANIMAL FEEDED';
   String requestStatus = 'Request';
   String uid = UserModel.firebaseAuth.currentUser.uid;
+  StreamSubscription<DocumentSnapshot> _eventsSubscription;
+
   @override
   void initState() {
     super.initState();
-    UserModel.firestore
+    _eventsSubscription = UserModel.firestore
         .collection('users')
         .doc(widget.heroTag)
         .collection('request')
@@ -43,9 +49,11 @@ class _DetailsPageState extends State<DetailsPage> {
         .snapshots()
         .listen((event) {
       if (event.exists) {
-        setState(() {
-          requestStatus = 'Cancel';
-        });
+        if (this.mounted) {
+          setState(() {
+            requestStatus = 'Cancel';
+          });
+        }
       } else {
         UserModel.firestore
             .collection('users')
@@ -54,9 +62,29 @@ class _DetailsPageState extends State<DetailsPage> {
             .doc(widget.data.data()['userid'])
             .get()
             .then((value) {
-          if (value.data()['taskStatus'] == 'incomplete') {
-            setState(() {
-              requestStatus = 'Pending';
+          if (value.data()['taskStatus'] == 'incomplete' &&
+              value.data()['requestStatus'] == 'accept') {
+            if (this.mounted) {
+              setState(() {
+                requestStatus = 'Pending';
+              });
+            }
+
+            new Future.delayed(const Duration(seconds: 1)).then((_) {
+              scaffoldKey.currentState.showSnackBar(
+                  SnackBar(content: Text("Your Task Status is pending")));
+            });
+          }
+          if (value.data()['requestStatus'] == 'reject') {
+            if (this.mounted) {
+              setState(() {
+                requestStatus = 'Request';
+              });
+            }
+
+            new Future.delayed(const Duration(seconds: 1)).then((_) {
+              scaffoldKey.currentState.showSnackBar(
+                  SnackBar(content: Text("Your request is rejected")));
             });
           }
         });
@@ -65,8 +93,14 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _eventsSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         key: scaffoldKey,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -368,12 +369,14 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildPostPicture(data.data()['taskimage']),
+          data.data()['taskimage'] != null
+              ? buildPostPicture(data.data()['taskimage'])
+              : buildPostPicture("assets/user.png"),
           SizedBox(
             height: 25,
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.06,
+            height: MediaQuery.of(context).size.height * 0.08,
             padding: const EdgeInsets.all(8.0),
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -502,23 +505,44 @@ class _HomeScreenState extends State<HomeScreen> {
   Stack buildPostPicture(String urlPost) {
     return Stack(
       children: [
-        Container(
-          height: MediaQuery.of(context).size.width - 100,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  spreadRadius: 2,
-                  blurRadius: 20,
-                  offset: Offset(0, 10),
+        (urlPost.toString().contains('assets'))
+            ? Container(
+                height: MediaQuery.of(context).size.width - 100,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 20,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                    image: DecorationImage(
+                        fit: BoxFit.cover, image: AssetImage(urlPost))),
+              )
+            : CachedNetworkImage(
+                imageUrl: urlPost,
+                imageBuilder: (context, imageProvider) => Container(
+                  height: MediaQuery.of(context).size.width - 100,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 20,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(30),
+                    image: DecorationImage(
+                        image: imageProvider, fit: BoxFit.cover),
+                  ),
                 ),
-              ],
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(urlPost),
-              )),
-        ),
+                placeholder: (context, url) =>
+                    Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
         Positioned(
           bottom: 20,
           right: 20,

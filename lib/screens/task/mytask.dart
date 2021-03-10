@@ -68,7 +68,7 @@ class _MyTaskState extends State<MyTask> {
           SizedBox(height: 15.0),
           Container(
             padding: EdgeInsets.all(10),
-            height: MediaQuery.of(context).size.height * 0.85,
+            height: MediaQuery.of(context).size.height * 0.80,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
@@ -144,13 +144,32 @@ class _MyTaskState extends State<MyTask> {
                                             children: [
                                               Icon(Icons.bar_chart, size: 15),
                                               SizedBox(width: 5),
-                                              Text(
-                                                  data.get(
-                                                      FieldPath(['status'])),
-                                                  style: TextStyle(
-                                                      fontFamily: 'Overpass',
-                                                      fontSize: 15.0,
-                                                      color: Colors.grey)),
+                                              data.data()['status'] ==
+                                                      'complete'
+                                                  ? Text(
+                                                      data.get(FieldPath([
+                                                        'status'
+                                                      ])),
+                                                      style:
+                                                          TextStyle(
+                                                              fontFamily:
+                                                                  'Overpass',
+                                                              fontSize: 15.0,
+                                                              color:
+                                                                  Colors.green[
+                                                                      800]))
+                                                  : Text(
+                                                      data
+                                                          .get(FieldPath([
+                                                        'status'
+                                                      ])),
+                                                      style:
+                                                          TextStyle(
+                                                              fontFamily:
+                                                                  'Overpass',
+                                                              fontSize: 15.0,
+                                                              color: Colors
+                                                                  .green)),
                                             ],
                                           ),
                                           Row(

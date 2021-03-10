@@ -68,7 +68,7 @@ class _BadgeNotificationState extends State<BadgeNotification> {
           SizedBox(height: 15.0),
           Container(
             padding: EdgeInsets.all(10),
-            height: MediaQuery.of(context).size.height * 0.85,
+            height: MediaQuery.of(context).size.height * 0.80,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
